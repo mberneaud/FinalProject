@@ -2,7 +2,7 @@
 
 This repo contains [Jonas Markgraf's](https://github.com/jmarkgraf) and [Malte Berneaud-Kötz's](https://github.com/mberneaud) final paper and website of our research project in the Collaborative Social Science Data Analysis course at the Hertie School of Governance. 
 
-**Instrucutor**: Christopher Gandrud
+**Instructor**: Christopher Gandrud
 
 ## Note regarding the data sets used in the analysis
 
