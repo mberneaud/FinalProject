@@ -152,7 +152,25 @@ MayorElection <- subset(MayorElection, ElectionType != 3)
 MayorElection <- subset(MayorElection, Contested == 1)
 
 # excluding mayors who did not run again (likely because of retirement)
+# creating a vector with the column numbers of all other candidate names
+otherCandidateColumns <- grep("Name ", names(MayorElection))
 
+# creating empty variable to be filled in next step
+MayorElection$StandAgain <- NA
+# Loop starts at 2nd observation because otherwise 0 would be returned for i-1, 
+# which results in NA for the logical condition of the if structure
+for(i in 2:nrow(MayorElection)) {
+  # Creating a vector with the names of all candidates which ran in it
+  allCandidates <- as.character(as.vector(MayorElection[i, c(1, otherCandidateColumns)]))
+# Partially matching the name of the previous mayor among the names of all
+# candidates of the current election, if it there's a match, 1 will be assigned to
+# the StandAgain variable. If there is no match, 0 is assigned.
+  if(any(pmatch(MayorElection$NameCandidate1[i-1], allCandidates), na.rm = TRUE)) {
+    MayorElection$StandAgain[i] <- 1
+  } else {
+    MayorElection$StandAgain[i] <- 0
+  }
+}
 
 # creating lagged variables -----------------------------------------------
 ## Lagged DV
