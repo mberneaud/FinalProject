@@ -15,13 +15,13 @@ lapply(include.packages, library, character.only = TRUE)  # loading all packages
 # Loading data ------------------------------------------------------------
 
 # Sparkassen Board Membership data
-SparkassenBoard <- read_excel("data/BankBoards_Bavaria_RImport.xlsx",
+SparkassenBoard <- read_excel("../data/BankBoards_Bavaria_RImport.xlsx",
                               sheet = "BoardComp")
 ## define variable class:
 SparkassenBoard$Incumbent <- as.character(SparkassenBoard$Incumbent)
 
 # Municipal Election data
-MayorElection <- read_excel("data/MayorElectionData.xlsx",
+MayorElection <- read_excel("../data/MayorElectionData.xlsx",
                             sheet = "Bgm_OB")
 
 
@@ -112,6 +112,7 @@ MayorElection$Phd <- ifelse(grepl("Dr.", MayorElection$NameCandidate1), 1, 0)
 MayorElection$NameCandidate1 <- gsub(" Dr.", "", MayorElection$NameCandidate1)
 MayorElection$NameCandidate1 <- gsub(" jur.", "", MayorElection$NameCandidate1)
 
+
 # creating the total number of terms for each mayor
 tally <- dplyr::tally(group_by(MayorElection, NameCandidate1))
 names(tally)[2] <- "TotalTerms"
@@ -151,40 +152,73 @@ MayorElection <- subset(MayorElection, ElectionType != 3)
 # Subsetting to contested elections only
 MayorElection <- subset(MayorElection, Contested == 1)
 
-# excluding mayors who did not run again (likely because of retirement)
+
+# creating dummy for retired mayors ---------------------------------------
+
 # creating a vector with the column numbers of all other candidate names
 otherCandidateColumns <- grep("Name ", names(MayorElection))
 
+# cleaning the remaining candidate columns from " Dr." and " jur." strings
+for(i in otherCandidateColumns) {
+  MayorElection[, i]<- gsub(" Dr.", "", MayorElection[, i])
+  MayorElection[, i]<- gsub(" jur.", "", MayorElection[, i])
+}
+
+# Excluding mayors who probably retired (JM)
+# This loop is quick and produces 7472 observations where the candidate did stand
+# for election again
+MayorElection <- slide(MayorElection, Var = "NameCandidate1",
+                       GroupVar = "IDMunicipality",
+                       NewVar = "L.NameCandidate1")
+# MayorElection$Retired <- 1
+# MayorElection$Retired[MayorElection$NameCandidate1 ==
+#                         MayorElection$L.NameCandidate1] <- 0
+# MayorElection$Retired[MayorElection$`Name 2Nachname Titel Vorname` ==
+#                         MayorElection$L.NameCandidate1] <- 0
+# MayorElection$Retired[MayorElection$`Name 3Nachname Titel Vorname` ==
+#                         MayorElection$L.NameCandidate1] <- 0
+# MayorElection$Retired[MayorElection$`Name 4Nachname Titel Vorname` ==
+#                         MayorElection$L.NameCandidate1] <- 0
+
+# excluding mayors who did not run again (likely because of retirement) (MBK)
+# This loop is rather hacky and therefore quite slow and produces 7491 elections
+# where a mayor stood for re-election
+
 # creating empty variable to be filled in next step
 MayorElection$StandAgain <- NA
-# Loop starts at 2nd observation because otherwise 0 would be returned for i-1, 
+# Loop starts at 2nd observation because otherwise 0 would be returned for i-1,
 # which results in NA for the logical condition of the if structure
 for(i in 2:nrow(MayorElection)) {
   # Creating a vector with the names of all candidates which ran in it
-  allCandidates <- as.character(as.vector(MayorElection[i, c(1, otherCandidateColumns)]))
-# Partially matching the name of the previous mayor among the names of all
-# candidates of the current election, if it there's a match, 1 will be assigned to
-# the StandAgain variable. If there is no match, 0 is assigned.
-  if(any(pmatch(MayorElection$NameCandidate1[i-1], allCandidates), na.rm = TRUE)) {
+  allCandidates <- as.character(MayorElection[i, c(1, otherCandidateColumns)])
+  # Partially matching the name of the previous mayor among the names of all
+  # candidates of the current election, if it there's a match, 1 will be assigned to
+  # the StandAgain variable. If there is no match, 0 is assigned.
+  if(is.na(MayorElection$L.NameCandidate1[i])) {
+    next()
+  }
+  if(any(pmatch(MayorElection$L.NameCandidate1[i], allCandidates), na.rm = TRUE)) {
     MayorElection$StandAgain[i] <- 1
   } else {
     MayorElection$StandAgain[i] <- 0
   }
 }
 
+
+
 # creating lagged variables -----------------------------------------------
 ## Lagged DV
 # creating lagged incumbency for the calculation of the re-election binary variable
-MayorElection <- slide(MayorElection, Var = "NameCandidate1", TimeVar = "ElectionDate", NewVar = "L.NameCandidate1")
+# MayorElection <- slide(MayorElection, Var = "NameCandidate1", TimeVar = "ElectionDate", NewVar = "L.NameCandidate1")
 MayorElection$Reelection <- ifelse(MayorElection$NameCandidate1 == MayorElection$L.NameCandidate1, 1, 0)
 
 # Lagging variables for analysis, lag of SparkassenMembership is already implemented above. Lag variable is called "IncumbentSparkassenMember"
 MayorElection <- slide(MayorElection, Var = "Geschlecht1", TimeVar = "ElectionDate", NewVar = "L.Geschlecht1")
 MayorElection <- slide(MayorElection, Var = "VoteShareWinner", TimeVar = "ElectionDate", NewVar = "L.VoteShareWinner")
 
-# Subsetting for years ----------------------------------------------------
+# Subsetting for years and excluding retired mayors -----------------------------------
 MayorElection <- subset(MayorElection, Year >= 2006)
-
-
+# MayorElection <- subset(MayorElection, Retired == 0)
+MayorElection <- subset(MayorElection, StandAgain == 1)
 
 
