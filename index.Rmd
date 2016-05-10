@@ -1,0 +1,29 @@
+---
+title: 'The Political Economy of Public Banks: Electoral Effects of Savings Banks
+  in Bavarian Subnational Politics'
+author: "Jonas Markgraf & Malte Berneaud-Kötz (Hertie School of Governance Berlin)"
+output: html_document
+---
+
+## Abstract
+===========
+
+This paper aims to **estimate the effect of board membership in German *Sparkassen* (public savings banks) on politicians' success in local elections**. For this purpose, we exploit the fact that not all locally elected political leaders in Germany are board members in savings banks and compare electoral performance of politicians with and without participation in savings bank’s Board of Directors.
+The paper contributes to the Public Economics literature on *electoral credit cycles* that argues that public banks increase lending in years preceeding elections and to the Political Science debate on the *incumbency advantage* that politicians appear to enjoy. It will be analyzed if board membership of incumbents is a mediating factor for the *incumbency effect*.
+As part of the research project, we compile a novel, largely hand-collected panel dataset on the boardroom composition of German savings banks with detailed information on board member profiles, along with data on municipal electoral results in Bavaria covering 2,099 municipalities and 79 savings banks over the period from 2006 to 2015.[^1]
+
+### Motivation
+
+
+
+## Institutional Setting
+
+## Hypothesis
+
+## Model
+
+## Findings
+
+## Conclusion
+
+[^1]: The presented research project is part of a paper project by Guillermo Rosas (Washington University in St. Louis) and Jonas Markgraf (Hertie School of Governance Berlin).
