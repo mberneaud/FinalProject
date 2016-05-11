@@ -53,9 +53,9 @@ p6 <- ggplot(BankSector, aes(BankType, TotalLending)) +
   ylab("Total Lending (in '000 Euro)")
 ```
 
-```{r assets and lending, echo=FALSE, out.height='350px', out.width='350px'}
-print(p5)
-print(p6)
+```{r assets and lending, echo=FALSE, warning=FALSE}
+library(gridExtra)
+grid.arrange(p5, p6, ncol=2, bottom="Figure 1: Total Assets and Total Lending in German Banking System")
 ```
 
 Public banks are particularly important in the German banking system with more than 400 public banks. Germany's publicly owned savings banks (*Sparkassen*) are important local employers and lenders to small- and medium-sized enterprises; overall they account for 34% of total assets and 44% (see Figure 1) of total lending in Germany [@DeutscheBundesbank2015]. Hence, public savings banks constitute an essential element of the German banking sector and are important actors for the German *Mittelstand* economy.
