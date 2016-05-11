@@ -1,24 +1,50 @@
 ---
-title: 'The Political Economy of Public Banks: Electoral Effects of Savings Banks
-  in Bavarian Subnational Politics'
-author: "Jonas Markgraf & Malte Berneaud-Kötz (Hertie School of Governance Berlin)"
-output: html_document
+title: 'The Political Economy of Public Banks'
+subtitle: 'Electoral Effects of Savings Banks in German Subnational Politics - The Case of Bavaria'
+author: |
+        | Jonas Markgraf & Malte Berneaud-Kötz
+        | Hertie School of Governance
+output: 
+  html_document:
+    toc: true
+    toc_float:
+      smooth_scroll: true
+      collapsed: true
+    theme: journal
+    highlight: monochrome
+bibliography: library.bib
+
 ---
 
 ## Abstract
-===========
 
 This paper aims to **estimate the effect of board membership in German *Sparkassen* (public savings banks) on politicians' success in local elections**. For this purpose, we exploit the fact that not all locally elected political leaders in Germany are board members in savings banks and compare electoral performance of politicians with and without participation in savings bank’s Board of Directors.
 The paper contributes to the Public Economics literature on *electoral credit cycles* that argues that public banks increase lending in years preceeding elections and to the Political Science debate on the *incumbency advantage* that politicians appear to enjoy. It will be analyzed if board membership of incumbents is a mediating factor for the *incumbency effect*.
 As part of the research project, we compile a novel, largely hand-collected panel dataset on the boardroom composition of German savings banks with detailed information on board member profiles, along with data on municipal electoral results in Bavaria covering 2,099 municipalities and 79 savings banks over the period from 2006 to 2015.[^1]
 
-### Motivation
+## Background
+### The Financial Crisis
+The collapse of large the US bank Lehman Brothers in 2008 and the global financial crisis brought banks to the attention of the general public and raised academic interest in the relation between banking and politics. However: Public banks, that means the role of politicians *within* banks, are strikingly neglected by the Political Economy literature. This comes as a surprise as they constitute an essential part of the European bank-based financial system, played a central role during the financial crisis[^2] and provide a highly interesting case for Political Economists to study the effects of politicized corporate governance.
+
+### Politicized Sparkassen!
+
+Public banks are particularly important in the German banking system with more than 400 public banks. Germany's publicly owned savings banks (*Sparkassen*) are important local employers and lenders to small- and medium-sized enterprises; overall they account for 34% of total assets and 44% (see Figure 1) of total lending in Germany [@DeutscheBundesbank2015]. Hence, public savings banks constitute an essential element of the German banking sector and are important actors for the German *Mittelstand* economy.
+```{load banking statistic, include=FALSE}
+library(ggplot2)
+library(plotly)
+setwd("/Users/jonasmarkgraf/Desktop/FinalProject/data/")
+source("BankSector.R")
+```
 
 
 
-## Institutional Setting
+At the same time, close links between savings banks and local politics make banks subject to potential political influence. *Sparkassen* are owned by German counties and municipalities, which grants local politicians access to key supervisions function in the bank management. Due to their public ownership, local politicians are members of savings banks' Board of Directors (*Verwaltungsrat*) as well as the credit committee, which allows them to influence strategic decisions of savings banks (e.g. credit volume or bank consolidation) with direct implications for the municipal economy. Scholars, therefore, often speculate about the politicization of bank activities and political rent extraction by board members. Academic studies have shown that public banks are indeed subject to *political lending cycles* [@Dinc2005; @Baum2010; @Jackowicz2012]; recent papers have, moreover, demonstrated that German *Sparkassen* also follow the political business cycle of elections [@Englmaier2016; @Gropp2015; @Vins2008]. 
 
-## Hypothesis
+### Effects for Elections?
+
+Departing from this finding, our study aims to determine whether mayors with a seat at a savings bank board extract political rents in form of re-election from the board seat, i.e. it aims to understand if politicized lending behavior affects electoral outcomes. Incumbent parties and candidates seem to derive an advantage from holding political office during re-election campaigns (*incumbency advantage*) and previous research has demonstrated that also German politicians at the state, federal, and municipal political level enjoy incumbency advantages [@Ade2011; @Freier2011; @Hainmueller2008]. Our research project, therefore, contributes to both literatures - the *incumbency advantage* and the *political lending cycle* - by analyzing if politicized lending actually affects electoral performance of board members and, thus, if incumbents' board membership is a mediating factor for the observed incumbency effect.
+
+In our empirical strategy we exploit the fact that not all municipal mayors in Bavaria are members of a *Sparkassen* board and estimate if mayors with a board seat are more likely to get re-elected than mayors without a seat at the board.
 
 ## Model
 
@@ -26,4 +52,8 @@ As part of the research project, we compile a novel, largely hand-collected pane
 
 ## Conclusion
 
+## References
+
 [^1]: The presented research project is part of a paper project by Guillermo Rosas (Washington University in St. Louis) and Jonas Markgraf (Hertie School of Governance Berlin).
+
+[^2]: Spanish public savings banks (*cajas*) faltered and dissolved in the course of the bursting Spanish real estate bubble ([link](http://voxeu.org/article/five-lessons-spanish-cajas-debacle-new-euro-wide-supervisor)); similarly, German *Landesbanken* got into serious trouble and were partly consolidated ([link](http://www.sueddeutsche.de/geld/fehlspekulationen-der-landesbanken-chronologie-einer-krise-1.283250) (in German)). At the same time, German *Sparkassen* weathered the financial crisis well and emerged strengthened from it ([link](http://www.telegraph.co.uk/finance/financialcrisis/3190674/Financial-crisis-boosts-German-banks.html)). This heterogeneous crisis performance of public banks remains largely unexplained and motivates the PhD project of one of the authors.
