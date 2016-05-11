@@ -10,12 +10,26 @@ output:
     toc: yes
   pdf_document:
     toc: yes
-header-includes:
-- \usepackage{setspace}
-- \doublespacing
 subtitle: 'Course: Introduction to Collaborative Social Science Data Analysis (MPP-E1180)'
 bibliography: library.bib
 ---
+
+
+```{r setting_chunk_options, include=FALSE}
+############### NOTE ###############
+# In order for the RMarkdown file to render correctly, you need to place the source data sets into the data/ folder in the root directory of this repo. 
+
+
+knitr::opts_chunk$set(fig.height=3, fig.width = 5, fig.align = "center", fig.path='graphs/',
+                      include = FALSE, warning=FALSE, message=FALSE, cache=TRUE)
+# Supressed output for any code chunk in the document, so all graphs, tables,
+# etc which need to have the outputs shown should use include = TRUE as an option
+```
+
+```{r loading_preparing_data}
+# Loading of libraries, cleaning and subsetting code is done in the external R-script
+source("standalone_R_code.R")
+```
 
 # 1. Introduction[^3]
 
@@ -114,9 +128,109 @@ In order to cleanly estimate the effect of board membership on re-election chanc
 
 # 6. Findings
 ## 6.1. Descriptive Statistics
+## 6.1.1. Sparkassen Dataset
+
+As outlined above, the *Sparkassen* dataset contains information on names, political position (no full-time politician; mayor; county commissioner) and position within the board (top position; non-top position). This allows us the estimate the degree of politicization of boards and the patterns of politicization.
+
+The Board Membership dataset contains 79 banks. Board size varies between a maximum of 32 board seats and a minimum of six seats; on average (median), Bavarian savings banks have 12 persons on the supervisory board.
+
+```{r Basic summary statistics for banks}
+# DESCRIPTIVE STATISTICS: BANKS
+
+## Number of Banks in Bank dataframe
+length(unique(SparkassenBoard[,c("bank_name")])) # 79 banks in Database
+
+## Board Size
+summary(SparkassenBoard_UniqueBanks$board_size) # max: 32 seats, min: 6 seats, average (median): 12 seats
+```
+```{r Boxplot: Size of Boards}
+ggplot(SparkassenBoard_UniqueBanks, aes(x = 1, y = board_size)) +
+  geom_boxplot() +
+  ggtitle("Size of Bank Board") +
+  xlab("") +
+  ylab("Number of Board Members") + 
+  theme(plot.title = element_text(size=10))
+
+```
+
+```{r Boxplot: Board Size, include=TRUE, echo=FALSE, fig.align="center", out.height="6cm", out.height="5cm"}
+ggplot(SparkassenBoard_UniqueBanks, aes(x = 1, y = board_size)) +
+  geom_boxplot() +
+  ggtitle("Size of Bank Board") +
+  xlab("") +
+   theme_bw() +
+  ylab("Number of Board Members") +
+  theme(  axis.text.x = element_blank())
+```
+
+
+For those 79 banks, we have overall almost 9,000 board member-year observations, about 1,600 unique board member profiles of which 410 are mayors (23%) and 175 are county commissioners (11%).
+
+```{r Basic summary statistics board member profiles}
+# DESCRIPTIVE STATISTICS: BOARD MEMBERS
+
+## Number of name-year combinations
+length(SparkassenBoard$NameCandidate1) #8974 name-year combinations
+
+## Number of Profiles in Board dataframe
+length(unique(SparkassenBoard[,c("NameCandidate1")])) # 1,663 unique profiles in dataframe
+
+## Number and Share of Prof. Politicians in Board Dataframe
+table(unique(SparkassenBoard[,c("NameCandidate1", "Incumbent")])$Incumbent) # 410 mayors; 174 Landräte; 1,157 others
+
+prop.table(table(SparkassenBoard$Incumbent)) # 23% mayors; 11% Landrat; 65% others
+```
+
+Of the 9,000 board member-year observations, about one-fourth (2,115 observations) are member-year observations for board members in top positions. Of those 2,115 observations, 875 are mayors and 1,006 are county commissioners; only 238 top-position observations belong to persons that are not full-time politicians.
+
+```{r Comparison: Board Members in Entire board and Top Positions, include=TRUE, echo= FALSE, fig.height=4, fig.align="center"}
+### Comparison: Board Members in Top Positions and Entire Board
+ggplot(SparkassenBoard, aes(TopPosition, frequency, fill = Incumbent)) +
+  geom_bar(aes(y = (..count..)), position=position_dodge(), width=1) +
+  xlab("") +
+  ggtitle("Political Board Representation in Top Positions \n and Non-Top Positions") +
+  scale_x_discrete(limit= c("0", "1"),
+                   labels=c("Non-Top Positions", "Top Positions")) +
+  ylab("No. Member-Year Observations") +
+  theme_bw() +
+  scale_fill_discrete(name="",
+                      breaks=c("0", "1", "2"),
+                      labels=c("No Full-Time Politician", "Mayor", "County Commissioner"))
+```
+
+Overall, this shows that a considerable share of bank boards is hold by full-time politicians (34%). Moreover, political representation is pronounced in top positions of banks' boards (county commissioners are only in top positions); as board seat holders of top positions have much higher influence on banks' strategic decisions (e.g. as the chairman is always member of the credit committee), this finding confirms our suspicion that German *Sparkassen* are subject to potentially high political control and shows that politicization of public savings banks mainly works through top positions.
+
+## 6.1.2. Election Data Set
+
+Out of all the mayors elected the time period under study, `r round((table(MayorElection$Geschlecht1)[2] / nrow(MayorElection))*100, 3)`% of the mayors who were elected were female.
+
+```{r party_affiliation_mayors, include=TRUE, echo=FALSE, warning=FALSE}
+ggplot(MayorElection, aes(x = CleanParty)) +
+  geom_bar() + ylab("Number of Mayors") + xlab("Party Affiliation") + ggtitle("Number of Mayors by Party Affiliation")
+```
+The biggest share of mayors are affiliated with the CSU, the second largest belong to other parties, which include independent voter lists. The SPD, a popular party in the entirety of Germany does worse than in the remainder of Germany. Out of `r nrow(MayorElection)` mayors which were elected over the study period, only `r table(MayorElection$CleanParty)[3]` mayors were affiliated with the SPD.
+
+```{r proportion_reelections_by_party}
+reelections <- group_by(MayorElection, CleanParty)
+reelections$Reelection <- as.character(reelections$Reelection) %>%  as.integer(.)
+reelections <- summarise(reelections, total.mayors.party = n(),
+                         number.reelected.mayors = sum(Reelection, na.rm = TRUE))
+reelections <- mutate(reelections, share.reelections = number.reelected.mayors / total.mayors.party)
+```
+
+```{r reelection_chances, include=TRUE, echo=FALSE, warning=FALSE}
+ggplot(reelections, aes(x = CleanParty, y = share.reelections)) +
+  geom_point(stat = "identity") + ylab("Share of Re-elected Mayors") +
+  xlab("Party Affiliation") + ggtitle("Re-election Chances of Mayors by Party")
+```
+
+Comparing the chances of re-election for mayors of different parties, we find that mayors from all parties except the SPD are re-elected in about 18% of the cases, whose mayors can reclaim office in roughly 24% of the cases.
+The number of eligible voters per municipality, which we intend to use to control variable for municipality size is severly right-skewed, as expected, so we will log it in our analysis. 
+
 
 
 # 6.2. Regression Results
+>>>>>>> 23792d3f9efbf1d6670952397300fdfe5d321e11
 ```{r regression models}
 fullmodel <- glm(Reelection~IncumbentSparkassenMember + L.VoteShareWinner + L.Geschlecht1 + log(NumberEligVoter),
   data = MayorElection,
@@ -126,13 +240,13 @@ covarnames <- c("Sparkassen board member", "Previous vote share", "Female", "Num
 
 ```{r tests, include=TRUE, echo=FALSE, results="asis"}
 stargazer(fullmodel, title = "Logistic regression results w/ odds ratios", dep.var.labels = "Re-election of mayor", 
-          covariate.labels = covarnames, header = FALSE, font.size = "scriptsize", single.row = TRUE,
+          covariate.labels = covarnames, header = FALSE, single.row = TRUE,
           apply.coef = exp, t.auto = F, p.auto = F, report = "vcp*", digits = 2, keep.stat = c("n", "ll", "rsq"))
 ## Note: coefficients are reported as odds ratios, but t-scores and p-values are calculated using the underlying logit function, coefficients, and standard errors
 ```
 
-# 7. Conclusion
 
+# 7. Conclusion
 The paper purports to estimate the effect of board membership in German public savings banks (*Sparkassen*) on mayors' electoral success. It compares electoral performance of mayors with and without a board seat in in Bavaria using a logistic regression model. To answer the research question, we compile a novel hand-collected dataset on the boardroom composition of German public banks with detailed information on board member profiles, which is combined with an existing data set on 6,267 Bavarian municipal elections from 2000 to 2014. 
 
 # References

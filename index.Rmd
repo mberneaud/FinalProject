@@ -28,15 +28,37 @@ The collapse of large the US bank Lehman Brothers in 2008 and the global financi
 
 ### Politicized Sparkassen!
 
-Public banks are particularly important in the German banking system with more than 400 public banks. Germany's publicly owned savings banks (*Sparkassen*) are important local employers and lenders to small- and medium-sized enterprises; overall they account for 34% of total assets and 44% (see Figure 1) of total lending in Germany [@DeutscheBundesbank2015]. Hence, public savings banks constitute an essential element of the German banking sector and are important actors for the German *Mittelstand* economy.
-```{load banking statistic, include=FALSE}
+```{r load banking statistic, include=FALSE}
+# load packages
 library(ggplot2)
 library(plotly)
+
+# set working directory and load file
 setwd("/Users/jonasmarkgraf/Desktop/FinalProject/data/")
 source("BankSector.R")
+
+# figures for banking sector in Germany
+p5 <- ggplot(BankSector, aes(BankType, TotalAssets)) +
+  geom_bar(stat = "identity", width=0.4) +
+  geom_text(aes(label=PercAssets), vjust=2, colour="white") +
+  theme_bw() +
+  xlab("") +
+  ylab("Total Assets (in '000 Euro)")
+
+p6 <- ggplot(BankSector, aes(BankType, TotalLending)) +
+  geom_bar(stat = "identity", width=0.4) +
+  geom_text(aes(label=PercLending), vjust=2, colour="white") +
+  theme_bw() +
+  xlab("") +
+  ylab("Total Lending (in '000 Euro)")
 ```
 
+```{r assets and lending, echo=FALSE, out.height='350px', out.width='350px'}
+print(p5)
+print(p6)
+```
 
+Public banks are particularly important in the German banking system with more than 400 public banks. Germany's publicly owned savings banks (*Sparkassen*) are important local employers and lenders to small- and medium-sized enterprises; overall they account for 34% of total assets and 44% (see Figure 1) of total lending in Germany [@DeutscheBundesbank2015]. Hence, public savings banks constitute an essential element of the German banking sector and are important actors for the German *Mittelstand* economy.
 
 At the same time, close links between savings banks and local politics make banks subject to potential political influence. *Sparkassen* are owned by German counties and municipalities, which grants local politicians access to key supervisions function in the bank management. Due to their public ownership, local politicians are members of savings banks' Board of Directors (*Verwaltungsrat*) as well as the credit committee, which allows them to influence strategic decisions of savings banks (e.g. credit volume or bank consolidation) with direct implications for the municipal economy. Scholars, therefore, often speculate about the politicization of bank activities and political rent extraction by board members. Academic studies have shown that public banks are indeed subject to *political lending cycles* [@Dinc2005; @Baum2010; @Jackowicz2012]; recent papers have, moreover, demonstrated that German *Sparkassen* also follow the political business cycle of elections [@Englmaier2016; @Gropp2015; @Vins2008]. 
 
@@ -46,11 +68,19 @@ Departing from this finding, our study aims to determine whether mayors with a s
 
 In our empirical strategy we exploit the fact that not all municipal mayors in Bavaria are members of a *Sparkassen* board and estimate if mayors with a board seat are more likely to get re-elected than mayors without a seat at the board.
 
-## Model
-
 ## Findings
 
+Data: would refer to our paper that is openly accessible (insert link) if reader wishes to have more information on precise data format
+
+Insert a graph of descriptive statistics: comparison re-election rate of board seat-holding mayors vs. non-board seat holding mayors --> motivation for regression (disentangle effect of board membership)
+
+Insert simple regression table; quickly comment on the findings and interpret (!)
+
 ## Conclusion
+
+Summarize finding regarding research question
+
+Caveats/weaknesses of approach; future steps in the analysis
 
 ## References
 
