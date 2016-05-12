@@ -1,0 +1,401 @@
+---
+title: 'Electoral Effects of Public Savings Banks in German Subnational Elections:
+  The Case of Bavaria'
+author: |
+  | Malte Berneaud-Kötz & Jonas Markgraf
+  | Hertie School of Governance
+date: "13 May 2016"
+output:
+  word_document:
+    toc: yes
+  pdf_document:
+    toc: yes
+subtitle: 'Course: Introduction to Collaborative Social Science Data Analysis (MPP-E1180)'
+bibliography:
+- library.bib
+- packages.bib
+---
+---
+nocite: |
+  @R-DataCombine, @R-dplyr, @R-ggplot2, @R-knitr, @R-MASS, @R-readxl, @R-rmarkdown, @R-stargazer, @R-stringr, @R-texreg, @R-xtable
+...
+
+```{r setting_chunk_options, include=FALSE}
+############### NOTE ###############
+# In order for the RMarkdown file to render correctly, you need to place the source data sets into the data/ folder in the root directory of this repo. 
+
+
+knitr::opts_chunk$set(fig.height=3, fig.width = 5, fig.align = "center", fig.path='graphs/',
+                      include = FALSE, warning=FALSE, message=FALSE, cache=TRUE)
+# Supressed output for any code chunk in the document, so all graphs, tables,
+# etc which need to have the outputs shown should use include = TRUE as an option
+```
+
+```{r loading_preparing_data}
+# Loading of libraries, cleaning and subsetting code is done in the external R-script
+source("standalone_R_code.R")
+```
+
+
+
+# 1. Introduction[^3]
+
+The collapse of large the US bank Lehman Brothers in 2008 and the subsequent global financial crisis brought banks to the attention of the general public, policymakers, and scholars. By analyzing issues such as financial regulation and moral hazard implications of banks that are 'too big to fail', political economists predominantly approach banks and politics as closely linked, but two separate spheres. Publicly owned banks are, thus, strikingly neglected by the Political Economy literature despite the fact that public banks play an essential role in many European banking sectors. This calls for closer examination of the political economy of public banks, hence, the implications of politicians *within* banks for bank action and political outcomes.
+
+Public banks are central players in many European countries, but are particularly important in the German banking system with more than 400 public banks. Germany's publicly owned savings banks (*Sparkassen*) are important local employers and lenders to small- and medium-sized enterprises; overall they account for 34% of total assets and 44% of total lending in Germany [@DeutscheBundesbank2015]. Hence, public savings banks constitute an essential element of the German banking sector and are important actors for the German *Mittelstand* economy.
+At the same time, close links between savings banks and local politics make banks subject to potential political influence. *Sparkassen* are owned by German counties and municipalities, which grants local politicians access to key supervisions function in the bank management. Due to their public ownership, local politicians are members of savings banks' Board of Directors (*Verwaltungsrat*) as well as the credit committee, which allows them to influence strategic decisions of savings banks (e.g. credit volume or bank consolidation) with direct implications for the municipal economy. Scholars, therefore, often speculate about the politicization of bank activities and political rent extraction by board members.
+
+In this paper, we analyze the effect of board membership in Bavarian *Sparkassen* in Germany on politicians’ success in local elections. Board membership enables politicians to influence bank activities that might improve their reelection chances. Previous papers have shown that German savings banks’ activities indeed follow the political business cycles of elections. However, it remains unclear whether these lending activities have an effect on incumbents’ reelection chances. To do so, the paper exploits the fact that not all locally elected political leaders in Germany are board members in savings banks. We compare electoral performance of politicians that are members of a board with that of politicians without a seat at a savings bank’s board. A unique hand-collected panel dataset on the boardroom composition of Bavarian savings banks with detailed information of board member profiles is used in order to analyze the effects of board membership on electoral success in municipalities[^2]. 
+
+The paper is structured as follows: In the next part, the institutional background is described. In Section 3, the relevant existing literature is reviewed. Section 4 outlines the main hypothesis of the paper and, subsequently, datasets and the statistical model are introduced (section 5) and in the 6th section, descriptive statistics and findings from inferential statistics are presented. Section 7 concludes.
+
+# 2. Institutional Setting
+## 2.1. German Public Banks
+
+The German three-pillar banking system consists of a small number of large commercial banks, about 1,100 cooperative banks, and 416 publicly owned *Sparkassen*. Today, *Sparkassen* account for 34% of total assets and 44% of lending to non-financial institutions in Germany [@DeutscheBundesbank2015] (see Appendix I). Besides their significant share in overall assets and lending, they are important actors for the local economy in Germany: German savings banks' mandate obliges them to not maximize profits, but support regional economic and social development[^5]. They foster local economic development by providing credit to small and medium-sized enterprises[^6] as well as to local governments and subsidize the production of local public goods such as access to finance in rural areas. 
+
+*Sparkassen's* geographical areas of business are, by law, restricted, so that savings banks do not compete against one another, but have a strong regional component in their activities; in any given municipality, only a single savings bank is established (no overlapping business areas, see Appendix II [in German]). 
+
+Most of the 416 *Sparkassen* are owned by the counties or municipalities in which they operate[^7]; for this reason, many local politicians of counties and municipalities, in particular county commissioners (*Landräte*) and mayors, are members of the Board of Directors (*Verwaltungsrat*) as well as at the credit committee of their local *Sparkasse*. The boardseat provides politicians with statutory leverage over strategic decisions of banks and opens the door for political tinkering and rent-seeking behaviour of politicians with a boardseat in their local savings bank.
+
+## 2.2. German Political System: Municipalities and Mayors in Germany
+
+The German federal political system consists of four government layers: the federal state (federal level), 16 states (state level), 399 counties and 107 county-free cities (county level), and 11,192 municipalities (municipal level). 
+Each municipality has its own municipal council and is jointly governed by the municipal council and its directly elected mayor[^8]. Election rules depend on federal law and the mayoral tenure vary across federal states between five and eight years; also, mayors' power and relationship to the municipal council is defined by federal law and has changed over time. In most federal states, mayors stand out in local politics as the only full-time politician at the municipal level[^9] with a strong and independent position [@Freier2011].
+
+German municipalities provide a variety of local public goods and services: They are responsible for administrating spending received from higher government tiers, oversee local public firms, and provide a variety of direct responsibilities such as cultural expenditures, childcare provision, or local infrastructure. While most tasks provided by municipalities are determined by law, local politicians have some room for manoeuvre as they can take on additional responsibilities and deliver voluntary services. Moreover, municipalities have a some degree of freedom in designing tax policy by determining municipal taxes (local business tax and property tax) [@Fritz2015]. At the same time, local politicians enjoy several benefits from their political position: Although most politicians at the local level are non-professional, they receive a considerable financial compensation for their work. More importantly, some get formal or informal access to influential positions, such as the board of their local *Sparkasse*. Hence, municipal elections are of importance for the population in the voting district[^10] as well as for the elected politicians.
+
+# 3. Literature review
+
+Academic scholars often speculate about the political use of banks, for instance arguing that banking crises occur because governments build banking systems that are 'fragile by design': Governments regulate banks, but also use them as a source of finance; they bailout banks, while requesting votes from taxpayers that foot the bailout bill [@Calomiris2014].
+
+Recent academic research confirms the existence of *electoral cycles* in public bank's lending and other business activities, such as bank consolidation. Interestingly, this effect is ubiquitous: Scholars find it in developing as well as in advanced market economies. It occurs in countries known for their close ties between politicians and banks, such as Southern and Eastern European countries [@Baum2010; @Dinc2005; @Sapienza2004; @Illueca; @Jackowicz2012; @LaPorta2002], but was observed in advanced market economies with strong institutional checks and balances like Germany too, where one would expect to see less politicization of bank activity.
+
+German savings banks have been shown to lend more in years in which elections take place at the county level [@Englmaier2016; @Gropp2015]; moreover, it has been demonstrated that *Sparkassen* are less likely to lay off employees and to merge with neighbouring savings banks in the year preceeding county elections [@Vins2008]. Thus, the existence of *electoral lending cycles* is well established in the literature. The Public Economics literature on public banks, however, largely focuses on the behaviour of banks and its detrimental effect to banks' performance, thereby ignoring an important aspect: The political implications of politicized bank behaviour. This paper contributes to this strand of literature by examining the electoral effect of politicians' board membership in German *Sparkassen*, hence, analyzing whether political tinkering with savings banks actually increases incumbents' chances for reelection.
+
+This paper, furthermore, contributes to the broad Political Science literature on the *incumbency advantage* in established democracies[^1]. Incumbent parties and candidates seem to derive an advantage from holding political office during reelection campaigns, an effect first identified by Erikson [-@Erikson1971] for US Congressional Elections. Previous research has demonstrated that also German politicians at the state, federal, and municipal political level enjoy incumbency advantages [@Ade2011; @Freier2011; @Hainmueller2008]. These studies, however, have not provided exhaustive explanations for the causal relation and the mediating factors between incumbency and reelection chance for politicians. By analyzing the electoral effect of board membership for incumbent mayors in Germany, this paper analyzes a potential causal mechanism for the incumbency advantage. The paper, thus, links the Public Economics literature on *political lending cycles* of banks and the Political Science literature on the *incumbency advantage* - two debates that, so far, have not talked to each other.
+
+# 4. Hypotheses and Predictions
+
+This paper examines the hypothesis that mayors with a board seat in their local *Sparkasse* are more likely to be reelected compared to mayors without a board seat. To estimate the effect of board membership on election outcomes, we exploit the fact that not all locally elected political leaders in Germany are board members in a savings bank and compare the electoral performance of politicians with and without board representation in their local savings bank.
+
+There are multiple channels through which board membership might affect incumbents' electoral performance:
+Board membership might signal competence to the mayor's constituency. Recent studies have demonstrated that German voters prefer better qualified mayoral candidates [@Freier2012]. Board membership provides mayors with visibility in their municipality and signals financial competence; thus, voters might perceive a mayor chairing the local savings banks as more competent.
+
+Secondly and more important, mayors with a board seat have access to supervisory tasks and strategic decision-making of the *Sparkasse*; the chairmen of the savings bank, usually mayors or county commissioners, even have access to the credit committee. In this way, board representatives can directly channel credit to certain enterprises, projects, or industries, and increase credit volume in the run-up of an election. Furthermore, board members can delay consolidation or mergers with other savings banks until after the election in order to avoid bad news about lay offs or closed branches until after the election. Finally, the Board of Directors decides on the payout of profits by the savings bank and donations by the savings banks.
+For these reasons, we hypothesize that mayors with a board seat in their local savings bank are able to extract political rents from the savings banks making reelection more likely. The *incumbency advantage* of mayors partly operates through board membership in local savings banks.
+
+To estimate the effect of board membership on electoral success of mayors in Germany, we focus on mayors who won their mandate in a contested election (more than one candidate); the reelection probability of mayors with a board seat is compared to the that of mayors without board representation. Thus, our sample consists of mayors that participated in at least two consecutive contested elections.
+
+Two aspects require particular attention in this research design as they might confound the estimated effect: The determinants of assignment of board posts and alternative factors affecting the reelection chance of incumbent mayors.
+Answering the research question requires a profound knowledge of the assignment process of board members in German savings banks. At this stage, we do not sufficiently understand the assignment procedure of mayoral board posts, but future versions of this project will seek to remedy this. 
+
+Furthermore, the paper will control for alternative factors that affect the probability of mayors to regain office[^4]. The size of the municipality might  affect the reelection chances of mayors as incumbents in larger municipalities have access to larger resources that can be used to regain the mayor's post[@Levitt]. In addition, personal characteristics of the mayor might affect his reelection chance, independent of the board membership of the mayor: Therefore, we control for vote share of the incumbent in the previous election assuming that candidates with higher vote shares enjoy more popularity and are thus more likely to get reelected in the next election. Moreover, we control for the gender of the incumbent, as we expect biased views among voters to work against the reelection chances of females.
+
+# 5. Data and Statistical Model
+## 5.1. Bank Board Data
+
+We hand-collect a unique panel dataset on the composition of Boards of Directors in Bavaria's *Sparkassen*. This dataset includes detailed information on board member profiles which enables us to identify mayors on bank boards:
+
+- name and gender of board members;
+
+- occupation of board members (identifier for mayors on board);
+
+- position within board: normal board member, chairman, or vice chairman.
+
+Annual information on Board of Directors is hand-collected from savings banks' annual reports available in PDF format on *Bundesanzeiger* for the years from 2006 to 2015; the database can be extended back to 1998 with micro-fiche versions of annual reports from Bureau van Dijk's *Bankscope* database. The dataset on boardroom composition constitutes the first comprehensive and systematic investigation of Bavarian savings banks' corporate governance as information on German public banks' boards has not been systematically collected yet.
+
+### 5.2. Election Data
+
+A database on mayoral elections in Bavaria is available from the state statistical office upon request (administration fee of 70 EUR. It contains data on direct municipal elections between 1948 and 2014. With this database we are covering 79 of the 416 German *Sparkassen* (19%) and 2,099 municipalities (19% of all municipalities in Germany). The data for mayoral elections contains the following variables:
+
+- election date;
+  
+- name of election winner and (at least) the first loser;
+
+- party affiliation of candidates;
+
+- vote shares of candidates;
+  
+- dummy for contested elections (at least two candidates);
+  
+- number of eligible voters in voting district (size of municipality).
+
+Matching the dataset for board composition and for mayoral elections allows to distinguish between mayors with and without board seats in their local savings bank and to analyze the electoral success of those mayors in subsequent elections. Hence, the dataset enables us to estimate the electoral effect of board membership for German mayors.
+
+## 5.3. Subset Selection and Restrictions
+Before conducting our analysis, we subsetted the data along different criteria in order to causally isolate the effect of *Sparkassen* board membership from other confounding factors which could not be controlled for otherwise.  
+The municipal election data set was subsetted to only include the time period for which we have data on *Sparkassen* board membership, which is from 2006 to 2015. We excluded elections which required run-offs, as leading candidates in those elections are not necessarily the winners of the run-off round. Moreover, non-contested elections (only one candidate) are excluded. As an earlier model we ran showed a negative correlation between votes shares a mayor had obtained during the previous election and her probability of becoming reelected in the subsequent election, a clear contradiction of previous research on the incumbency advantage. We supposed that this was due to popular mayors retiring while they enjoyed considerable public support still. To alleviate this problem, we restricted the dataset to include only those elections in which the incumbent was re-running. This whittled down our dataset considerably, but was necessary to avoid bias. In the end the study data set contained `r nrow(MayorElection2)` observations across two municipal election rounds (held in 2008 and 2014). 
+
+
+## 5.4. Statistical Model
+
+Given the research question, setting up the dependent variable as binary offers the best theoretical fit between the construct under study and the data available to us. Therefore, the analysis will employ a logistic regression model using reelection / no reelection of incumbent mayors as the dependent variable; the logistic model will allow us to compare the odds of reelection between mayors who also serve on a *Sparkassen* board and those who do not. 
+
+Given the research question, setting up the dependent variable as binary offers the best theoretical fit between the construct under study and the data available to us. Therefore, the analysis will employ a logistic regression model using reelection of incumbent mayors as the dependent variable {0;1}; the logistic model will give the probability of the incumbent to be reelected.
+The main independent variable of the model is board membership in the local *Sparkasse*, which is also binary {0;1}.
+
+# 6. Findings
+## 6.1. Descriptive Statistics
+## 6.1.1. Sparkassen Dataset
+
+The standalone Board Membership dataset contains 79 banks. Board size varies between a maximum of 32 board seats and a minimum of six seats; on average (median), Bavarian savings banks have 12 persons on the supervisory board.
+
+```{r Basic summary statistics for banks}
+# DESCRIPTIVE STATISTICS: BANKS
+
+## Number of Banks in Bank dataframe
+length(unique(SparkassenBoard[,c("bank_name")])) # 79 banks in Database
+
+## Board Size
+summary(SparkassenBoard_UniqueBanks$board_size) # max: 32 seats, min: 6 seats, average (median): 12 seats
+```
+```{r Boxplot: Size of Boards}
+ggplot(SparkassenBoard_UniqueBanks, aes(x = 1, y = board_size)) +
+  geom_boxplot() +
+  ggtitle("Size of Bank Board") +
+  xlab("") +
+  ylab("Number of Board Members") + 
+  theme(plot.title = element_text(size=10))
+
+```
+
+```{r Boxplot: Board Size, include=TRUE, echo=FALSE, fig.align="center", out.height="6cm", out.height="5cm"}
+ggplot(SparkassenBoard_UniqueBanks, aes(x = 1, y = board_size)) +
+  geom_boxplot() +
+  ggtitle("Size of Bank Board") +
+  xlab("") +
+   theme_bw() +
+  ylab("Number of Board Members") +
+  theme(  axis.text.x = element_blank())
+```
+
+
+For those 79 banks, we have overall almost 9,000 board member-year observations, about 1,600 unique board member profiles of which 410 are mayors (23%) and 175 are county commissioners (11%).
+
+```{r Basic summary statistics board member profiles}
+# DESCRIPTIVE STATISTICS: BOARD MEMBERS
+
+## Number of name-year combinations
+length(SparkassenBoard$NameCandidate1) #8974 name-year combinations
+
+## Number of Profiles in Board dataframe
+length(unique(SparkassenBoard[,c("NameCandidate1")])) # 1,663 unique profiles in dataframe
+
+## Number and Share of Prof. Politicians in Board Dataframe
+table(unique(SparkassenBoard[,c("NameCandidate1", "Incumbent")])$Incumbent) # 410 mayors; 174 Landräte; 1,157 others
+
+prop.table(table(SparkassenBoard$Incumbent)) # 23% mayors; 11% Landrat; 65% others
+```
+
+Of the 9,000 board member-year observations, about one-fourth (2,115 observations) are member-year observations for board members in top positions. Of those 2,115 observations, 875 are mayors and 1,006 are county commissioners; only 238 top-position observations belong to persons that are not full-time politicians.
+
+```{r Comparison: Board Members in Entire board and Top Positions, include=TRUE, echo= FALSE, fig.height=4, fig.align="center"}
+### Comparison: Board Members in Top Positions and Entire Board
+ggplot(SparkassenBoard, aes(TopPosition, frequency, fill = Incumbent)) +
+  geom_bar(aes(y = (..count..)), position=position_dodge(), width=1) +
+  xlab("") +
+  ggtitle("Political Board Representation in Top Positions \n and Non-Top Positions") +
+  scale_x_discrete(limit= c("0", "1"),
+                   labels=c("Non-Top Positions", "Top Positions")) +
+  ylab("No. Member-Year Observations") +
+  theme_bw() +
+  scale_fill_discrete(name="",
+                      breaks=c("0", "1", "2"),
+                      labels=c("No Full-Time Politician", "Mayor", "County Commissioner"))
+```
+
+Overall, this shows that a considerable share of bank boards is held by full-time politicians (34%). Moreover, political representation is pronounced in top positions of banks' boards (county commissioners are only in top positions); as board seat holders of top positions have much higher influence on banks' strategic decisions (e.g. as the chairman is always member of the credit committee), this finding confirms our suspicion that German *Sparkassen* are subject to potentially high political control and shows that politicization of public savings banks mainly works through top positions.
+
+## 6.1.2. Election Data Set
+
+Out of all the mayors elected the time period under study, `r round((table(MayorElection2$Geschlecht1)[2] / nrow(MayorElection2))*100, 1)`% of the mayors who were elected were female.
+
+```{r proportion_reelections_by_party}
+reelections <- group_by(MayorElection2, CleanParty)
+reelections$Reelection <- as.character(reelections$Reelection) %>%  as.integer(.)
+reelections <- summarise(reelections, total.mayors.party = n(),
+                         number.reelected.mayors = sum(Reelection, na.rm = TRUE))
+reelections <- mutate(reelections, share.reelections = number.reelected.mayors / total.mayors.party)
+reelections <- tbl_df(reelections)
+```
+
+Comparing the chances of reelection for mayors of different parties, we find that mayors from all parties have relatively high chances of being reelected. The probabilities are as follows:  
+\begin{center}
+\begin{tabular}{lr}
+Party & reelection share \\
+CSU: & 85\% \\
+SPD: & 84\%  \\
+Others: & 81\% \\
+\end{tabular}
+\end{center}
+
+The number of eligible voters per municipality, which we intend to use to control variable for municipality size is severly right-skewed, as expected, so we will log it in our analysis. 
+
+```{r distribution_previous_vote, include=TRUE, echo=FALSE, warning=FALSE}
+d <- density(MayorElection2$L.VoteShareWinner , na.rm = TRUE)
+par(familiy = "serif")
+plot(d, main = "Vote Shares of Winning Mayor in Previous Election", xlab = "Vote share in %",
+     ylab = "Kernel Density")
+```
+Likewise, the distribution of previous vote shares seen just above is heavily right-skewed, which is unsurprising given that mayors need to obtain at least 50% of the vote shares in order to become elected, thus this serves a s lower bound in the distribution. 
+
+To gain a first understanding of the relationship between board positions for mayors and their chances of reelection, lets look at a cross table tabulating *Sparkassen* board membership against non-reelection and reelection. The third and fourth column in the table below show that the proportion of reelected mayors is three percentage points higher among those mayors who are are also a member of the local *Sparkassen* board, as compared to those who are not. While this effect is small, it could potentially be statistically significant. In the following section, this relationship will be explored in greater detail using logistic regression. 
+
+```{r cross-tabulation, include=TRUE, echo=FALSE, warning=FALSE, results="asis"}
+tbl <- table(MayorElection2$SparkassenMember, MayorElection2$Reelection)
+tbl2 <- prop.table(tbl, 1)
+tbl3 <- cbind(tbl, tbl2)
+df <- data.frame("Not Reelected" = tbl3[, 1], "Reelected" = tbl3[, 2],
+                 Percentage.Not.Reelected = tbl3[, 3], Percentage.Reelected = tbl3[, 4],
+                 row.names = c("not in Sparkasse", "in Sparkasse"))
+
+xt <- xtable(df)
+
+print.xtable(xt, comment = FALSE)
+```
+
+
+# 6.2. Regression Results
+```{r regression models}
+model1 <- glm(Reelection~IncumbentSparkassenMember,
+              data = MayorElection2,
+              family = "binomial")
+
+model2 <- glm(Reelection~IncumbentSparkassenMember +
+               L.VoteShareWinner,
+              data = MayorElection2,
+              family = "binomial")
+
+model3 <- glm(Reelection~IncumbentSparkassenMember +
+                L.VoteShareWinner +
+                log(NumberEligVoter),
+              data = MayorElection2,
+              family = "binomial")
+
+model4 <- glm(Reelection~IncumbentSparkassenMember +
+                L.VoteShareWinner +
+                log(NumberEligVoter) +
+                L.Geschlecht1,
+              data = MayorElection2,
+              family = "binomial")
+
+covarnames <- c("Sparkassen board member", "Previous vote share", "Female", "Number eligible voters")
+```
+
+Four models with different specifications were run during the analysis. The estimation results are reported as odds ratios in Table 1 below. P-values of the point estimates which are based on the underlying beta-coefficients and standard errors are reported along with the odds ratios. We find a positive effect of *Sparkassen* board membership in the model excluding controls (1) and the model controlling for previous vote share only (2). While this effect goes into the expected direction, it is not statistically significant which could be attributed to the limited number of observations under study (N = 1,341).
+
+```{r tests, include=TRUE, echo=FALSE, results="asis"}
+stargazer(model1, model2, model3, model4, title = "Logistic regression results w/ odds ratios", dep.var.labels = "reelection of mayor", 
+          covariate.labels = covarnames, header = FALSE, single.row = TRUE,
+          apply.coef = exp, t.auto = F, p.auto = F, report = "vcp*", digits = 2, keep.stat = c("n", "ll", "rsq"))
+## Note: coefficients are reported as odds ratios, but t-scores and p-values are calculated using the underlying logit function, coefficients, and standard errors
+```
+After including additional control variables in models (3) and (4), the effect of board membership on the odds of being re-elected as compared to non-board members turns negative. However, as with the previous two models, these estimates are not statistically significant. Moreover, the instability of the estimates across different models is worrisome, given that the inclusion of sex, a statistically insignificant covariate, results in a reversal of the estimated effect of *Sparkassen* board membership. These findings suggest that there is no strong effect of board membership on the odds of re-election probability of Bavarian mayors or that the effect is too small to be measured reliably with the small amount of observations included in the data.
+
+Another surprising finding is the direction of the effect of sex on the odds of getting reelected. The estimation suggests that female mayors could have higher odds of becoming reelected. Yet, this result is not statistically significant so we cannot make any inferences on effect of sex on the probability of re-election. 
+
+The size of the municipality, as measured by the number of eligible voters in that municipality seems to reduce the probability of reelection going by the estimated odds ratio, but fails to achive statistical significance. Hence, we cannot make any causal inference about the effect of the municipality size on the odds of becoming reelected. 
+
+```{r simulation_for_vote_share}
+# Creating dummy from lagged sex variable
+MayorElection2$L.DummySex <- ifelse(MayorElection2$L.Geschlecht1 == "m", 0, 1)
+
+# Find range of L.VoteShare1 in data
+vs_range <- 20:97
+# extract coefficients and variance-covariance matrix from model
+fm_coef <- matrix(coef(model4))
+fm_vcov <- vcov(model4)
+
+# drawing simulations of the point estimates
+drawn <- data.frame(mvrnorm(n = 1000, mu = fm_coef, Sigma = fm_vcov))
+
+# matching simulations to all possible values in L.VoteShare1
+draw_sim <- merge(drawn, vs_range)
+draw_sim <- dplyr::rename(draw_sim, fitted.vs = y)
+
+# Calculating predicted probabilites with the data at hand
+# I am using the averages of all covariates except vote share
+draw_sim$pred.prob <- 1 / (1 + exp(-(draw_sim[, 1] + draw_sim[, 2] * mean(MayorElection2$Reelection, na.rm = TRUE) + draw_sim[, 3] * draw_sim[, 6] + draw_sim[, 4] * mean(MayorElection2$L.DummySex) + draw_sim[, 5] * mean(log(MayorElection2$NumberEligVoter), na.rm = TRUE))))
+```
+
+```{r graphing_simulation, include=TRUE, echo=FALSE}
+ggplot(draw_sim, aes(x = fitted.vs, y = pred.prob)) + geom_point(alpha = 0.1) +
+  stat_smooth(se = FALSE) + theme_bw() + ggtitle("Probability of reelection By Previous Vote Shares") + 
+  ylab("Probability of reelection") + xlab("Vote Share in Previous Election")
+```
+As expected, the vote share the mayor attained in the previous election has a significant effect on the probability of reelection in the following election. This is indicated by the highly statistically significant estimates associated with the previous vote share. To strengthen our claim and to assess the marginal effect of increases in previous vote share, we carried out a simulation. We generated predicted values using simulated point estimates for the coefficient of previous votes shares while keeping all other covariates at their means. The resulting probabilities are marked as individual dots in the graph above, with a fitted line drawn through them. A positive marginal effect of each increase in the previous share on the estimated probability of reelection is found. What's surprising is that the predicted probabilities are so much lower than what we observed we in the cross tabulation in Section 6.1.2. This may result from the mean values of the covariates used in calculating the predicted values, which is heavily skewed in the case of municipality size. Nevertheless, a significant marginal effect of higher previous vote shares is visible from the slope of the graph. 
+
+```{r regression models2}
+model5 <- glm(Reelection~IncumbentSparkassenMember,
+              data = MayorElection,
+              family = "binomial")
+
+model6 <- glm(Reelection~IncumbentSparkassenMember +
+               L.VoteShareWinner,
+              data = MayorElection,
+              family = "binomial")
+
+model7 <- glm(Reelection~IncumbentSparkassenMember +
+                L.VoteShareWinner +
+                log(NumberEligVoter),
+              data = MayorElection,
+              family = "binomial")
+
+model8 <- glm(Reelection~IncumbentSparkassenMember +
+                L.VoteShareWinner +
+                log(NumberEligVoter) +
+                L.Geschlecht1,
+              data = MayorElection,
+              family = "binomial")
+
+covarnames <- c("Sparkassen board member", "Previous vote share", "Female", "log(Number eligible voters)")
+```
+
+Out of curiosity, we also ran the regression models without excluding elections were prior mayors were not among the losers (were prior mayors did not run again). This likely introduces some bias because we do not control for the fact that some mayors do not get reelected because they do not run again, possibly because they retire from their political office. This way, we count retiring as failure to become re-elected. On the other hand, one could argue that "losing mayors" are likely underrepresented in the sample, as mayors strategically decide not to run again if they expect not to win again. Overall, we have two biases which affect our results in opposite directions, so we thought it wise to estimate both models in order to get an intuition of the sizes of the competing effects.  
+
+```{r tests2, include=TRUE, echo=FALSE, results="asis"}
+stargazer(model5, model6, model7, model8, title = "Logistic regression results w/ odds ratios without deleting possibly retired mayors", dep.var.labels = "reelection of mayor", 
+          covariate.labels = covarnames, header = FALSE, single.row = TRUE,
+          apply.coef = exp, t.auto = F, p.auto = F, report = "vcp*", digits = 2, keep.stat = c("n", "ll", "rsq"))
+## Note: coefficients are reported as odds ratios, but t-scores and p-values are calculated using the underlying logit function, coefficients, and standard errors
+```
+
+Aside from having almost double the amount of observations, the second set of models varies immensely from the first, indicating a statistically highly significant effect of *Sparkassen* board membership on the odds of reelection. Without controlling for either sex and municipality size, those mayors who are member of a Sparkassen board have 53% higher odds of getting reelected as compared to those who are not board members. This effect size is unusally large considering a mayor on the board of his local *Sparkasse* has only indirect channels through which she could leverage her position to enusre reelection. When introducing controls for sex and municipality size, the odds ratio in favour of board members shrinks to 23%, which is still outstanding in terms of magnitude, which raises suspicion towards the size of the bias. 
+
+What's surprising about thes models is that vote share obtained in previous elections does not have any effect on the odds of getting reelected, which is expressed in an odds ratio of 1.00 and large p-values for the underlying estimates. Another surprising find, as with the models depicted in Table 1, is that female mayors seem to have higher odds of reelection (23% in models 3 and 4), while we would have expected voters to be biased against female mayors. This is potentially driven by the low amount of female mayors we have in the sample (98 out of 1,341 mayors who were elected).
+
+Moreover, we find an odds ratio below 1 associated with the size of the municipality, which indicates that incumbent mayors in larger municipalities have lower odds of reelection as compared to those from smaller municipalities. This is in direct conflict with findings of other scholars [e.g. @Freier2011], who find that mayors in bigger municipalities enjoy a larger incumbency advantage. 
+
+All in all, while the estimates for our main variable on the second set of models look really tempting, we must conced that they are most likely biased, leaving us with the meager results of the first set of models.
+
+# 7. Conclusion
+The paper purports to estimate the effect of board membership in German public savings banks (*Sparkassen*) on mayors' electoral success. It compares electoral performance of mayors with and without a board seat in in Bavaria using a logistic regression model. To answer the research question, we compiled a novel hand-collected dataset on the boardroom composition of German public banks with detailed information on board member profiles, which we combined with an existing data set on Bavarian municipal elections. 
+
+The descriptive statistics show that the boards of local savings banks are indeed heavily politicized with 34% percent of boards made up out of politicians and county commissioners. Whether politicians can leverage theses positions was tested using inferential statistics. 
+
+Unfortunately, the logistic regression did not find any statistically significant effects of *Sparkassen* board membership on the odds of reelection for mayors in Bavaria.This failure to find an effect is most likely related to the small sample size and the expected small effect size of board membership on the odds of becoming reelected, since mayors can only use really indirect and possibly inefficient channels to extract political rents from their position on a *Sparkassen* board. In order to find statistically significant results, we require models with greater statistical power which will be generated in the future through the addition of other german federal states to the study data set. Given the limited scope of the present study, it should be taken as a motivation to collect further data and create more accurate models.
+
+On a positive note, we find a statistically significant effect of the previous vote share on the probability of re-election, all else equal. This lends support to findings made by Freier [-@Freier2011], who found a strong incumbency effect on the probability of reelection for Bavarian mayors.
+
+# References
+
+[^1]: Interestingly, in young democracies, such as Mexico, scholars find the opposite effect (*incumbency curse*), i.e. incumbents seem to get punished in the following election [e.g. @Lucardi2016].
+
+[^2]: As data collection for the board composition of German savings banks is very time-consuming, we were forced to restrict our sample to only one federal state.
+
+[^3]: This paper is based on and a part of a research project by Guillermo Rosas (Washington University in St. Louis; grosas@wustl.edu) and Jonas Markgraf (Hertie School of Governance; markgraf@hertie-school.org).
+
+[^4]: Due to time constraints, we had to limit our control variables to those that were readily available from the existing datasets. Hence, we could not include important controls such as the economic situation in the municipality (economic voting hypothesis) and competence measures of the mayor.
+
+[^5]: *Sparkassen*, for instance, are major contributors of local initiatives and projects through generous donations.
+
+[^6]: SMEs are the backbone of the German economy. Usually, smaller companies have less access to credit. The specific nature of the German banking system with the prominent role of *Sparkassen*, however, facilitates access to credit for smaller enterprises.
+
+[^7]: Only five savings banks are politically independent and not owned by a political entity.
+
+[^8]: While municipal mayors in Bavaria and Baden Wurttemberg are elected directly by voters since World War II, most German federal states introduced direct elections on the municipal level only in the 1990s.
+
+[^9]: Not all mayors are full-time politicians. By law, municipalities with more than 5,000 inhabitants should have a full-time mayor; however, this threshold is fuzzy in reality (for pitfalls with population thresholds in Regression Discontinuity Designs, see Eggers et al. [-@Eggers2015]). Generally, full-time mayors govern larger municipalities than part-time mayors.
+
+[^10]: The perceived importance of municipal elections in Germany is reflected in the comparatively high voter turnout. In Bavaria, for instance, the average voter turnout in municipal elections was 55% in 2014, which is significantly higher than for European or county elections.
