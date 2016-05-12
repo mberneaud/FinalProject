@@ -4,12 +4,15 @@
 
 # Packages needed for the execution of this Rmd are listed in include.packages and checked against the installed packages on the machine executing the code. If they are not installed, they will be installed automatically.
 include.packages <- c("dplyr", "ggplot2", "stringr", "readxl", "DataCombine", "texreg",
-                      "stargazer", "MASS")
+                      "stargazer", "MASS", "knitr", "rmarkdown")
 needed.packages <- include.packages[!(include.packages %in% installed.packages()[, "Package"])]
 if(length(needed.packages)) install.packages(needed.packages, 
                                              repos = "https://cran.uni-muenster.de/")
 
 lapply(include.packages, library, character.only = TRUE)  # loading all packages at once
+
+# exporting package citations
+knitr::write_bib(include.packages, "packages.bib")
 
 
 # Loading data ------------------------------------------------------------
@@ -219,6 +222,6 @@ MayorElection <- slide(MayorElection, Var = "VoteShareWinner", TimeVar = "Electi
 # Subsetting for years and excluding retired mayors -----------------------------------
 MayorElection <- subset(MayorElection, Year >= 2006)
 # MayorElection <- subset(MayorElection, Retired == 0)
-MayorElection <- subset(MayorElection, StandAgain == 1)
+MayorElection2 <- subset(MayorElection, StandAgain == 1)
 
 
