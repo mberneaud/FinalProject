@@ -58,6 +58,7 @@ SparkassenBoard_UniqueBanks <- unique(SparkassenBoard[ ,c("bank_ID", "bank_name"
 SparkassenBoard_TopPositions <- subset(SparkassenBoard, TopPosition == 1)
 
 
+
 # Cleaning municipality election data set ---------------------------------
 
 # removing newlines

@@ -11,9 +11,9 @@ output:
   pdf_document:
     toc: yes
 subtitle: 'Course: Introduction to Collaborative Social Science Data Analysis (MPP-E1180)'
-bibliography: 
-  - library.bib
-  - packages.bib
+bibliography:
+- library.bib
+- packages.bib
 ---
 ---
 nocite: |
@@ -125,23 +125,23 @@ Matching the dataset for board composition and for mayoral elections allows to d
 
 ## 5.3. Subset Selection and Restrictions
 Before conducting our analysis, we subsetted the data along different criteria in order to causally isolate the effect of *Sparkassen* board membership from other confounding factors which could not be controlled for otherwise.  
-The municipal election data set was subsetted to only include the time period for which we have data on *Sparkassen* board membership, which is from 2006 to 2016. We excluded elections which required run-offs, as leading candidate in those elections does not have to be the one winning the run-off. Moreover, elections where no candidate besides the incumbent mayor ran for office were excluded. As an earlier model we ran showed a negative correlation between votes shares a mayor had obtained during the previous election and her probability of becoming reelected in the subsequent election, a clear contradiction of previous research on the incumbency advantage. We supposed that this was due to popular mayors retiring while they enjoyed considerable public support still. To alleviate this problem, we restricted the data set to include only those elections were the last period's mayor was among the candidates. This whittled down our data set considerably, but was necessary to avoid bias. In the end the study data set contained `r nrow(MayorElection2)` observations across two municipal election rounds (held in 2008 and 2014). 
+The municipal election data set was subsetted to only include the time period for which we have data on *Sparkassen* board membership, which is from 2006 to 2015. We excluded elections which required run-offs, as leading candidates in those elections are not necessarily the winners of the run-off round. Moreover, non-contested elections (only one candidate) are excluded. As an earlier model we ran showed a negative correlation between votes shares a mayor had obtained during the previous election and her probability of becoming reelected in the subsequent election, a clear contradiction of previous research on the incumbency advantage. We supposed that this was due to popular mayors retiring while they enjoyed considerable public support still. To alleviate this problem, we restricted the dataset to include only those elections in which the incumbent was re-running. This whittled down our dataset considerably, but was necessary to avoid bias. In the end the study data set contained `r nrow(MayorElection2)` observations across two municipal election rounds (held in 2008 and 2014). 
 
 
 ## 5.4. Statistical Model
 
 Given the research question, setting up the dependent variable as binary offers the best theoretical fit between the construct under study and the data available to us. Therefore, the analysis will employ a logistic regression model using reelection / no reelection of incumbent mayors as the dependent variable; the logistic model will allow us to compare the odds of reelection between mayors who also serve on a *Sparkassen* board and those who do not. 
 
-The primary independent variable of the model is board membership in the local *Sparkasse*.
-In order to cleanly estimate the effect of board membership on reelection chances, it is important to get a good grasp on potentially confounding factors. We therefore control for obvious potential drivers such as mayors' vote share during the previous election, which serves as a measure of the incumbency advantage. Further control are candidates' sex and municipality size (measured by number of eligible voters) as larger municipalities might offer more resources to retain the mayor's office.
+Given the research question, setting up the dependent variable as binary offers the best theoretical fit between the construct under study and the data available to us. Therefore, the analysis will employ a logistic regression model using reelection of incumbent mayors as the dependent variable {0;1}; the logistic model will give the probability of the incumbent to be reelected.
+The main independent variable of the model is board membership in the local *Sparkasse*, which is also binary {0;1}.
+In order to cleanly estimate the effect of board membership on re-election probability, it is important to get a good grasp on the determinants of appointment to board positions. We therefore control for obvious potential drivers such as mayors' vote share in the previous election, which serves as a measure of the incumbency advantage. Further control are candidates' sex and municipality size (measured by number of eligible voters) as larger municipalities might offer more resources to retain the mayor's office.
+
 
 # 6. Findings
 ## 6.1. Descriptive Statistics
 ## 6.1.1. Sparkassen Dataset
 
-As outlined above, the *Sparkassen* dataset contains information on names, political position (no full-time politician; mayor; county commissioner) and position within the board (top position; non-top position). This allows us the estimate the degree of politicization of boards and the patterns of politicization.
-
-The Board Membership dataset contains 79 banks. Board size varies between a maximum of 32 board seats and a minimum of six seats; on average (median), Bavarian savings banks have 12 persons on the supervisory board.
+The standalone Board Membership dataset contains 79 banks. Board size varies between a maximum of 32 board seats and a minimum of six seats; on average (median), Bavarian savings banks have 12 persons on the supervisory board.
 
 ```{r Basic summary statistics for banks}
 # DESCRIPTIVE STATISTICS: BANKS
@@ -227,7 +227,7 @@ SPD: & 259  & 19\% \\
 \textit{Total} & \textit{1341} & \textit{100\%} \\
 \end{tabular}
 \end{center}
-The biggest share of mayors are affiliated with the CSU, the second largest belong to other parties, which include independent voter lists. The SPD, a popular party in the entirety of Germany does worse than in the remainder of Germany. Out of `r nrow(MayorElection2)` mayors which were elected over the study period, only `r table(MayorElection2$CleanParty)[3]` mayors were affiliated with the SPD. When looking at the vote share obtained by other parties, it is important to note that 
+The biggest share of mayors are affiliated with the CSU, the second largest belong to other parties, which include independent voter lists. The SPD, a popular party in the entirety of Germany does worse than in the remainder of Germany. Out of `r nrow(MayorElection2)` mayors which were elected over the study period, only `r table(MayorElection2$CleanParty)[3]` mayors were affiliated with the SPD. 
 
 ```{r proportion_reelections_by_party}
 reelections <- group_by(MayorElection2, CleanParty)
@@ -301,7 +301,7 @@ model4 <- glm(Reelection~IncumbentSparkassenMember +
 covarnames <- c("Sparkassen board member", "Previous vote share", "Female", "Number eligible voters")
 ```
 
-Four models with different specifications were run during the analysis. The estimation results are reported as odds ratios in Table 1 below. P-values of the point estimates which are based on the underlying beta-coefficients and standard errors are reported along with the odds ratios. We find a positive effect of *Sparkassen* board membership in the model excluding controls (1) and the model controlling for previous vote share only (2). While this effect goes into the right direction, it is not statistically significant which could be attributed to the limited number of observations under study (N = 1,341).
+Four models with different specifications were run during the analysis. The estimation results are reported as odds ratios in Table 1 below. P-values of the point estimates which are based on the underlying beta-coefficients and standard errors are reported along with the odds ratios. We find a positive effect of *Sparkassen* board membership in the model excluding controls (1) and the model controlling for previous vote share only (2). While this effect goes into the expected direction, it is not statistically significant which could be attributed to the limited number of observations under study (N = 1,341).
 
 ```{r tests, include=TRUE, echo=FALSE, results="asis"}
 stargazer(model1, model2, model3, model4, title = "Logistic regression results w/ odds ratios", dep.var.labels = "reelection of mayor", 
@@ -309,9 +309,9 @@ stargazer(model1, model2, model3, model4, title = "Logistic regression results w
           apply.coef = exp, t.auto = F, p.auto = F, report = "vcp*", digits = 2, keep.stat = c("n", "ll", "rsq"))
 ## Note: coefficients are reported as odds ratios, but t-scores and p-values are calculated using the underlying logit function, coefficients, and standard errors
 ```
-After including additional control variables in models (3) and (4), the effect of board membership on the odds of becoming reelected as compared to non-board members turns negative. However, as with the previous two models, these estimates are not statistically significant. Moreover, the instability of the estimates across different models is worrisome, given that the inclusion of sex, a statistically insignificant covariate, results in a reversal of the estimated effect of *Sparkassen* board membership. These findings suggest that there is no strong effect of board membership on the odds of reelection Bavarian mayors or that the effect is too small to be measured reliably with the small amount of observations included in the data.
+After including additional control variables in models (3) and (4), the effect of board membership on the odds of being re-elected as compared to non-board members turns negative. However, as with the previous two models, these estimates are not statistically significant. Moreover, the instability of the estimates across different models is worrisome, given that the inclusion of sex, a statistically insignificant covariate, results in a reversal of the estimated effect of *Sparkassen* board membership. These findings suggest that there is no strong effect of board membership on the odds of re-election probability of Bavarian mayors or that the effect is too small to be measured reliably with the small amount of observations included in the data.
 
-Another surprising finding is the direction of the effect of sex on the odds of getting reelected. The estimation suggests that female mayors could have higher odds of becoming reelected. Yet, this result is not statistically significant so we cannot make any inferences on effect of sex on the probability of reelection. 
+Another surprising finding is the direction of the effect of sex on the odds of getting reelected. The estimation suggests that female mayors could have higher odds of becoming reelected. Yet, this result is not statistically significant so we cannot make any inferences on effect of sex on the probability of re-election. 
 
 The size of the municipality, as measured by the number of eligible voters in that municipality seems to reduce the probability of reelection going by the estimated odds ratio, but fails to achive statistical significance. Hence, we cannot make any causal inference about the effect of the municipality size on the odds of becoming reelected. 
 
@@ -334,7 +334,7 @@ draw_sim <- dplyr::rename(draw_sim, fitted.vs = y)
 
 # Calculating predicted probabilites with the data at hand
 # I am using the averages of all covariates except vote share
-draw_sim$pred.prob <- 1 / (1 + exp(-(draw_sim[, 1] + draw_sim[, 2] + draw_sim[, 3] * draw_sim[, 6] + draw_sim[, 4] * mean(MayorElection2$L.DummySex) + draw_sim[, 5] * mean(log(MayorElection2$NumberEligVoter), na.rm = TRUE))))
+draw_sim$pred.prob <- 1 / (1 + exp(-(draw_sim[, 1] + draw_sim[, 2] * mean(MayorElection2$Reelection, na.rm = TRUE) + draw_sim[, 3] * draw_sim[, 6] + draw_sim[, 4] * mean(MayorElection2$L.DummySex) + draw_sim[, 5] * mean(log(MayorElection2$NumberEligVoter), na.rm = TRUE))))
 ```
 
 ```{r graphing_simulation, include=TRUE, echo=FALSE}
@@ -342,7 +342,7 @@ ggplot(draw_sim, aes(x = fitted.vs, y = pred.prob)) + geom_point(alpha = 0.1) +
   stat_smooth(se = FALSE) + theme_bw() + ggtitle("Probability of reelection By Previous Vote Shares") + 
   ylab("Probability of reelection") + xlab("Vote Share in Previous Election")
 ```
-As expected, the success of a mayor in the preceding election has a strong effect on the probability of reelection in the following election. This is indicated by the highly statistically significant estimates associated with the previous vote share. To strengthen our claim and to assess the probabilities of reelection across all possible values of the previous vote share variable, we carried out a simulation. To that end, predicted values were generated using simulated point estimates for the coefficient of previous votes shares while keeping all other covariates at their means. The resulting probabilities are marked as individual dots in the graph above, with a fitted line drawn through them. A clear upward trend in the probability is visible with increases in the previous vote share obtained.  
+As expected, the vote share the mayor attained in the previous election has a significant effect on the probability of reelection in the following election. This is indicated by the highly statistically significant estimates associated with the previous vote share. To strengthen our claim and to assess the probabilities of reelection across all possible values of the previous vote share variable, we carried out a simulation. To that end, predicted values were generated using simulated point estimates for the coefficient of previous votes shares while keeping all other covariates at their means. The resulting probabilities are marked as individual dots in the graph above, with a fitted line drawn through them. A positive marginal effect of each increase in the previous share on the estimated probability of reelection is found. What's surprising is that the predicted probabilities are so much lower than what we observed we in the cross tabulation in Section 6.1.2. Nevertheless, a significant marginal effect of higher previous vote shares is visible from the slope of the graph. 
 
 ```{r regression models2}
 model5 <- glm(Reelection~IncumbentSparkassenMember,
