@@ -34,6 +34,7 @@ library(ggplot2)
 library(plotly)
 library(xtable)
 
+
 # set working directory and load file
 setwd("/Users/jonasmarkgraf/Desktop/FinalProject/data/")
 source("BankSector.R")
@@ -54,9 +55,13 @@ p6 <- ggplot(BankSector, aes(BankType, TotalLending)) +
   ylab("Total Lending (in '000 Euro)")
 ```
 
+<<<<<<< HEAD
 ```{r assets and lending, echo=FALSE, out.height='350px', out.width='350px'}
 print(p5)
 print(p6)
+```{r assets and lending, echo=FALSE, warning=FALSE}
+library(gridExtra)
+grid.arrange(p5, p6, ncol=2, bottom="Figure 1: Total Assets and Total Lending in German Banking System")
 ```
 
 Public banks are particularly important in the German banking system with more than 400 public banks. Germany's publicly owned savings banks (*Sparkassen*) are important local employers and lenders to small- and medium-sized enterprises; overall they account for 34% of total assets and 44% (see Figure 1) of total lending in Germany [@DeutscheBundesbank2015]. Hence, public savings banks constitute an essential element of the German banking sector and are important actors for the German *Mittelstand* economy.
@@ -70,6 +75,7 @@ Departing from this finding, our study aims to determine whether mayors with a s
 In our empirical strategy we exploit the fact that not all municipal mayors in Bavaria are members of a *Sparkassen* board and estimate if mayors with a board seat are more likely to get re-elected than mayors without a seat at the board.
 
 ## Findings
+<<<<<<< HEAD
 Compared to mayors without a position in a Sparkassen board, mayors who are also represented in the governing board of the local savings bank have a reelection-rate which is 3 percentage points higher.
 
                 not reelected   reelected
@@ -83,6 +89,14 @@ source()
 
 ```
 
+=======
+
+Data: would refer to our paper that is openly accessible (insert link) if reader wishes to have more information on precise data format
+
+Insert a graph of descriptive statistics: comparison re-election rate of board seat-holding mayors vs. non-board seat holding mayors --> motivation for regression (disentangle effect of board membership)
+
+Insert simple regression table; quickly comment on the findings and interpret (!)
+>>>>>>> 4278c248603dbb3218837063558075eb8563319b
 
 ## Conclusion
 

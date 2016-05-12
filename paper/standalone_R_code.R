@@ -5,6 +5,7 @@
 # Packages needed for the execution of this Rmd are listed in include.packages and checked against the installed packages on the machine executing the code. If they are not installed, they will be installed automatically.
 include.packages <- c("dplyr", "ggplot2", "stringr", "readxl", "DataCombine", "texreg",
                       "stargazer", "MASS", "knitr", "rmarkdown", "xtable")
+
 needed.packages <- include.packages[!(include.packages %in% installed.packages()[, "Package"])]
 if(length(needed.packages)) install.packages(needed.packages, 
                                              repos = "https://cran.uni-muenster.de/")

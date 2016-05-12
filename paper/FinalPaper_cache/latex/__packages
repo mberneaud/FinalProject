@@ -1,0 +1,9 @@
+base
+dplyr
+ggplot2
+stringr
+readxl
+DataCombine
+texreg
+stargazer
+MASS
