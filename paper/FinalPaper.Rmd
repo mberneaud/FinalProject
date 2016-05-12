@@ -134,8 +134,6 @@ Given the research question, setting up the dependent variable as binary offers 
 
 Given the research question, setting up the dependent variable as binary offers the best theoretical fit between the construct under study and the data available to us. Therefore, the analysis will employ a logistic regression model using reelection of incumbent mayors as the dependent variable {0;1}; the logistic model will give the probability of the incumbent to be reelected.
 The main independent variable of the model is board membership in the local *Sparkasse*, which is also binary {0;1}.
-In order to cleanly estimate the effect of board membership on re-election probability, it is important to get a good grasp on the determinants of appointment to board positions. We therefore control for obvious potential drivers such as mayors' vote share in the previous election, which serves as a measure of the incumbency advantage. Further control are candidates' sex and municipality size (measured by number of eligible voters) as larger municipalities might offer more resources to retain the mayor's office.
-
 
 # 6. Findings
 ## 6.1. Descriptive Statistics
@@ -211,23 +209,7 @@ Overall, this shows that a considerable share of bank boards is held by full-tim
 
 ## 6.1.2. Election Data Set
 
-Out of all the mayors elected the time period under study, `r round((table(MayorElection2$Geschlecht1)[2] / nrow(MayorElection2))*100, 3)`% of the mayors who were elected were female.
-
-```{r party_affiliation_mayors}
-tbl <- table(MayorElection2$CleanParty)
-cbind(tbl, prop.table(tbl))
-```
-
-\begin{center}
-\begin{tabular}{lrl}
-Party & Frequency & Share \\
-CSU: & 563 & 42\% \\
-Others: & 519 & 39\%  \\
-SPD: & 259  & 19\% \\
-\textit{Total} & \textit{1341} & \textit{100\%} \\
-\end{tabular}
-\end{center}
-The biggest share of mayors are affiliated with the CSU, the second largest belong to other parties, which include independent voter lists. The SPD, a popular party in the entirety of Germany does worse than in the remainder of Germany. Out of `r nrow(MayorElection2)` mayors which were elected over the study period, only `r table(MayorElection2$CleanParty)[3]` mayors were affiliated with the SPD. 
+Out of all the mayors elected the time period under study, `r round((table(MayorElection2$Geschlecht1)[2] / nrow(MayorElection2))*100, 1)`% of the mayors who were elected were female.
 
 ```{r proportion_reelections_by_party}
 reelections <- group_by(MayorElection2, CleanParty)
@@ -253,7 +235,7 @@ The number of eligible voters per municipality, which we intend to use to contro
 ```{r distribution_previous_vote, include=TRUE, echo=FALSE, warning=FALSE}
 d <- density(MayorElection2$L.VoteShareWinner , na.rm = TRUE)
 par(familiy = "serif")
-plot(d, main = "Vote Shares of Winning Mayor in Previous Election", xlab = "Vote Share of Winners",
+plot(d, main = "Vote Shares of Winning Mayor in Previous Election", xlab = "Vote share in %",
      ylab = "Kernel Density")
 ```
 Likewise, the distribution of previous vote shares seen just above is heavily right-skewed, which is unsurprising given that mayors need to obtain at least 50% of the vote shares in order to become elected, thus this serves a s lower bound in the distribution. 
@@ -342,7 +324,7 @@ ggplot(draw_sim, aes(x = fitted.vs, y = pred.prob)) + geom_point(alpha = 0.1) +
   stat_smooth(se = FALSE) + theme_bw() + ggtitle("Probability of reelection By Previous Vote Shares") + 
   ylab("Probability of reelection") + xlab("Vote Share in Previous Election")
 ```
-As expected, the vote share the mayor attained in the previous election has a significant effect on the probability of reelection in the following election. This is indicated by the highly statistically significant estimates associated with the previous vote share. To strengthen our claim and to assess the probabilities of reelection across all possible values of the previous vote share variable, we carried out a simulation. To that end, predicted values were generated using simulated point estimates for the coefficient of previous votes shares while keeping all other covariates at their means. The resulting probabilities are marked as individual dots in the graph above, with a fitted line drawn through them. A positive marginal effect of each increase in the previous share on the estimated probability of reelection is found. What's surprising is that the predicted probabilities are so much lower than what we observed we in the cross tabulation in Section 6.1.2. Nevertheless, a significant marginal effect of higher previous vote shares is visible from the slope of the graph. 
+As expected, the vote share the mayor attained in the previous election has a significant effect on the probability of reelection in the following election. This is indicated by the highly statistically significant estimates associated with the previous vote share. To strengthen our claim and to assess the marginal effect of increases in previous vote share, we carried out a simulation. We generated predicted values using simulated point estimates for the coefficient of previous votes shares while keeping all other covariates at their means. The resulting probabilities are marked as individual dots in the graph above, with a fitted line drawn through them. A positive marginal effect of each increase in the previous share on the estimated probability of reelection is found. What's surprising is that the predicted probabilities are so much lower than what we observed we in the cross tabulation in Section 6.1.2. This may result from the mean values of the covariates used in calculating the predicted values, which is heavily skewed in the case of municipality size. Nevertheless, a significant marginal effect of higher previous vote shares is visible from the slope of the graph. 
 
 ```{r regression models2}
 model5 <- glm(Reelection~IncumbentSparkassenMember,
@@ -381,7 +363,9 @@ stargazer(model5, model6, model7, model8, title = "Logistic regression results w
 
 Aside from having almost double the amount of observations, the second set of models varies immensely from the first, indicating a statistically highly significant effect of *Sparkassen* board membership on the odds of reelection. Without controlling for either sex and municipality size, those mayors who are member of a Sparkassen board have 53% higher odds of getting reelected as compared to those who are not board members. This effect size is unusally large considering a mayor on the board of his local *Sparkasse* has only indirect channels through which she could leverage her position to enusre reelection. When introducing controls for sex and municipality size, the odds ratio in favour of board members shrinks to 23%, which is still outstanding in terms of magnitude, which raises suspicion towards the size of the bias. 
 
-What's surprising about thes models is that vote share obtained in previous elections does not have any effect on the odds of getting reelected, which is expressed in an odds ratio of 1.00 and large p-values for the underlying estimates. Another surprising find, as with the models depicted in Table 1, is that female mayors seem to have higher odds of reelection (23% in models 3 and 4), while we would have expected voters to be biased against female mayors. Moreover, we find an odds ratio below 1 associated with the size of the municipality, which indicates that incumbent mayors in larger municipalities have lower odds of reelection as compared to those from smaller municipalities. This is in direct conflict with findings of other scholars [e.g. @Freier2011], who find that mayors in bigger municipalities enjoy a larger incumbency advantage. 
+What's surprising about thes models is that vote share obtained in previous elections does not have any effect on the odds of getting reelected, which is expressed in an odds ratio of 1.00 and large p-values for the underlying estimates. Another surprising find, as with the models depicted in Table 1, is that female mayors seem to have higher odds of reelection (23% in models 3 and 4), while we would have expected voters to be biased against female mayors. This is potentially driven by the low amount of female mayors we have in the sample (98 out of 1,341 mayors who were elected).
+
+Moreover, we find an odds ratio below 1 associated with the size of the municipality, which indicates that incumbent mayors in larger municipalities have lower odds of reelection as compared to those from smaller municipalities. This is in direct conflict with findings of other scholars [e.g. @Freier2011], who find that mayors in bigger municipalities enjoy a larger incumbency advantage. 
 
 All in all, while the estimates for our main variable on the second set of models look really tempting, we must conced that they are most likely biased, leaving us with the meager results of the first set of models.
 
