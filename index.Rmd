@@ -28,15 +28,19 @@ The collapse of large the US bank Lehman Brothers in 2008 and the global financi
 
 ### Politicized Sparkassen!
 
-```{r load banking statistic, include=FALSE}
+```{r load banking statistic, include=FALSE, echo=FALSE}
 # load packages
-library(ggplot2)
-library(plotly)
-library(xtable)
+include.packages <- c("ggplot2", "plotly", "gridExtra")
 
+needed.packages <- include.packages[!(include.packages %in% installed.packages()[, "Package"])]
+if(length(needed.packages)) install.packages(needed.packages, 
+                                             repos = "https://cran.uni-muenster.de/")
+
+lapply(include.packages, library, character.only = TRUE)  # loading all packages at once
 
 # set working directory and load file
-setwd("/Users/jonasmarkgraf/Desktop/FinalProject/data/")
+try(setwd("/Users/jonasmarkgraf/Desktop/FinalProject/data/"))
+try(setwd("~/Git/FinalProject/data"))
 source("BankSector.R")
 
 # figures for banking sector in Germany
@@ -55,12 +59,9 @@ p6 <- ggplot(BankSector, aes(BankType, TotalLending)) +
   ylab("Total Lending (in '000 Euro)")
 ```
 
-<<<<<<< HEAD
-```{r assets and lending, echo=FALSE, out.height='350px', out.width='350px'}
-print(p5)
-print(p6)
+
 ```{r assets and lending, echo=FALSE, warning=FALSE}
-library(gridExtra)
+
 grid.arrange(p5, p6, ncol=2, bottom="Figure 1: Total Assets and Total Lending in German Banking System")
 ```
 
@@ -75,28 +76,39 @@ Departing from this finding, our study aims to determine whether mayors with a s
 In our empirical strategy we exploit the fact that not all municipal mayors in Bavaria are members of a *Sparkassen* board and estimate if mayors with a board seat are more likely to get re-elected than mayors without a seat at the board.
 
 ## Findings
-<<<<<<< HEAD
-Compared to mayors without a position in a Sparkassen board, mayors who are also represented in the governing board of the local savings bank have a reelection-rate which is 3 percentage points higher.
 
-                not reelected   reelected
----------------- ------------- ----------
-non-board member           17%        83%
-    board-member           14%        86%
+                    not reelected   reelected
+------------------ --------------  ----------
+  non-board member      182 (17%)   866 (83%)
+      board-member       41 (14%)   252 (86%)
 
+Compared to mayors without a position in a Sparkassen board, mayors who are also represented in the governing board of the local savings bank have 3 percentage-point higher reelection rate. 
 
-```{r regression results, echo=FALSE, warning=FALSE}
-source()
+Guided by this first finding, we conducted a logistic regression to see whether a statistically significant effect remained when controlling for  
+ + share of votes obtained during the last election
+ + logged number of eligible voters in the municipality (as a proxy for municipality size)
+ + sex of the mayoral candidate  
+ 
+ 
+```{r regression, include=FALSE}
+source("paper/standalone_R_code.R")
+model4 <- glm(Reelection~IncumbentSparkassenMember +
+                L.VoteShareWinner +
+                log(NumberEligVoter) +
+                L.Geschlecht1,
+              data = MayorElection2,
+              family = "binomial")
 
+covarnames <- c("Sparkassen board member", "Previous vote share", "Female", "Number eligible voters")
 ```
 
-=======
+```{r results_table, echo=FALSE, warning=FALSE, results="asis"}
+stargazer(model4, title = "Logistic regression results w/ odds ratios", dep.var.labels = "reelection of mayor", covariate.labels = covarnames, header = FALSE, single.row = TRUE, apply.coef = exp, t.auto = F, p.auto = F, report = "vcp*", digits = 2, keep.stat = c("n", "ll", "rsq"), type = "html")
+```
 
-Data: would refer to our paper that is openly accessible (insert link) if reader wishes to have more information on precise data format
+Unfortunately, the logistic regression does not support the finding that there's a statistically significant effect of board membership. 
 
-Insert a graph of descriptive statistics: comparison re-election rate of board seat-holding mayors vs. non-board seat holding mayors --> motivation for regression (disentangle effect of board membership)
-
-Insert simple regression table; quickly comment on the findings and interpret (!)
->>>>>>> 4278c248603dbb3218837063558075eb8563319b
+For a listing of all models which were run and further insights into the data, please see our [Research Paper](https://github.com/mberneaud/FinalProject/blob/master/paper/FinalPaper.pdf). 
 
 ## Conclusion
 

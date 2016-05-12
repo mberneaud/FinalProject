@@ -11,7 +11,6 @@ output:
   pdf_document:
     toc: yes
 subtitle: 'Course: Introduction to Collaborative Social Science Data Analysis (MPP-E1180)'
-<<<<<<< HEAD
 bibliography:
 - library.bib
 - packages.bib
@@ -42,11 +41,6 @@ knitr::opts_chunk$set(fig.height=3, fig.width = 5, fig.align = "center", fig.pat
 source("standalone_R_code.R")
 ```
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 4278c248603dbb3218837063558075eb8563319b
 # 1. Introduction[^3]
 
 The collapse of large the US bank Lehman Brothers in 2008 and the subsequent global financial crisis brought banks to the attention of the general public, policymakers, and scholars. By analyzing issues such as financial regulation and moral hazard implications of banks that are 'too big to fail', political economists predominantly approach banks and politics as closely linked, but two separate spheres. Publicly owned banks are, thus, strikingly neglected by the Political Economy literature despite the fact that public banks play an essential role in many European banking sectors. This calls for closer examination of the political economy of public banks, hence, the implications of politicians *within* banks for bank action and political outcomes.
@@ -54,11 +48,7 @@ The collapse of large the US bank Lehman Brothers in 2008 and the subsequent glo
 Public banks are central players in many European countries, but are particularly important in the German banking system with more than 400 public banks. Germany's publicly owned savings banks (*Sparkassen*) are important local employers and lenders to small- and medium-sized enterprises; overall they account for 34% of total assets and 44% of total lending in Germany [@DeutscheBundesbank2015]. Hence, public savings banks constitute an essential element of the German banking sector and are important actors for the German *Mittelstand* economy.
 At the same time, close links between savings banks and local politics make banks subject to potential political influence. *Sparkassen* are owned by German counties and municipalities, which grants local politicians access to key supervisions function in the bank management. Due to their public ownership, local politicians are members of savings banks' Board of Directors (*Verwaltungsrat*) as well as the credit committee, which allows them to influence strategic decisions of savings banks (e.g. credit volume or bank consolidation) with direct implications for the municipal economy. Scholars, therefore, often speculate about the politicization of bank activities and political rent extraction by board members.
 
-<<<<<<< HEAD
-In this paper, we analyze the effect of board membership in Bavarian *Sparkassen* in Germany on politicians’ success in local elections. Board membership enables politicians to influence bank activities that might improve their reelection chances. Previous papers have shown that German savings banks’ activities indeed follow the political business cycles of elections. However, it remains unclear whether these lending activities have an effect on incumbents’ reelection chances. To do so, the paper exploits the fact that not all locally elected political leaders in Germany are board members in savings banks. We compare electoral performance of politicians that are members of a board with that of politicians without a seat at a savings bank’s board. A unique hand-collected panel dataset on the boardroom composition of Bavarian savings banks with detailed information of board member profiles is used in order to analyze the effects of board membership on electoral success in municipalities[^2]. 
-=======
 In this paper, we analyze the effect of board membership in Bavarian *Sparkassen* in Germany on politicians’ success in local elections. Board membership enables politicians to influence bank activities that might improve their re-election chances. Previous papers have shown that German savings banks’ activities indeed follow the political business cycles of elections. However, it remains unclear whether these lending activities have an effect on incumbents’ re-election chances. To do so, the paper exploits the fact that not all locally elected political leaders in Germany are board members in savings banks. We compare electoral performance of politicians that are members of a board with that of politicians without a seat at a savings bank’s board. A unique hand-collected panel dataset on the boardroom composition of Bavarian savings banks with detailed information of board member profiles is used in order to analyze the effects of board membership on electoral success in municipalities[^2]. 
->>>>>>> 4278c248603dbb3218837063558075eb8563319b
 
 The paper is structured as follows: In the next part, the institutional background is described. In Section 3, the relevant existing literature is reviewed. Section 4 outlines the main hypothesis of the paper and, subsequently, datasets and the statistical model are introduced (section 5) and in the 6th section, descriptive statistics and findings from inferential statistics are presented. Section 7 concludes.
 
