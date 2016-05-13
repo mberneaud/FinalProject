@@ -10,5 +10,11 @@ This repo does not contain the necessary data sets needed to reproduce the analy
 
 As we do not intent to publish the data used in the analysis publicly, it needs to be manually inserted into the `data/`  directory. Otherwise, the RMarkdown will not render correctly as one of the earlier code chunks will throw an error right away. 
 
+## Important files
+
++ [Finished Paper](https://github.com/mberneaud/FinalProject/blob/master/paper/FinalPaper.pdf): The finished academic paper
+  + [Source File](https://github.com/mberneaud/FinalProject/blob/master/paper/FinalPaper.Rmd): Rmd file used to generate the paper  
++ [Finished Website](https://github.com/mberneaud/FinalProject/blob/gh-pages/index.html): The finished presentation website
+  + [Source File](https://github.com/mberneaud/FinalProject/blob/gh-pages/index.Rmd): Rmd file used to generate the html website
 
 **Please Note**: The paper is based on and a part of a research project by Guillermo Rosas (Washington University in St. Louis; grosas(at)wustl.edu) and Jonas Markgraf (Hertie School of Governance; markgraf(at)hertie-school.org).
