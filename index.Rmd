@@ -113,11 +113,11 @@ p <- plot_ly(MayorElection2, x = L.VoteShareWinner, y = Reelection,
              opacity = 0.5) %>%  layout(xaxis = x, yaxis = y) 
 p
 ```
-When we include the vote share a candidate received in the previous election along with board membership and whether or not a mayor was reelected (in the graph above), a much more fuzzy picture emerges. Most mayors who have done really good (>70% of votes) in the last election are reelected. On the other hand, most mayors who do not become reelected gained in between 50% and 70% of the votes in the last election. 
+When we include the vote share a candidate received in the previous election along with board membership and whether or not a mayor was reelected (in the graph above), a much more fuzzy picture emerges. Most mayors who have done very good (>70% of votes) in the last election are reelected. On the other hand, most mayors who do not become reelected gained in between 50% and 70% of the votes in the last election. This indicates that an *incumbency advantage* exists for mayors who were popular during the last election. 
 
-However, it no clear patterns of board-member-mayors cluttering around the high numbers of approval in the previous election. Instead, mayors who are also board members seem scattered randomly throughout reelected and non-reelected mayors. 
+However, there is no clear pattern of board-member-mayors cluttering around the high numbers of approval in the previous election. Instead, mayors who are also board members seem scattered randomly throughout reelected and non-reelected mayors. Hence, it remains uncertain whether board membership in a local *Sparkasse* has an effect on the probability of reelection.
 
-Guided by this first finding, we conducted a logistic regression to see whether a statistically significant effect remained when controlling for  
+Guided by this first finding, we conducted a logistic regression to see whether a statistically significant effect of board membership can be found when controlling for  
  + share of votes obtained during the last election
  + logged number of eligible voters in the municipality (as a proxy for municipality size)
  + sex of the mayoral candidate  
