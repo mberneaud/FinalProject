@@ -16,6 +16,11 @@ bibliography: library.bib
 
 ---
 
+```{r chunk_options, echo=FALSE}
+knitr::opts_chunk$set(cache=TRUE, fig.path = "images/")
+```
+
+
 ## Abstract
 
 This paper aims to **estimate the effect of board membership in German *Sparkassen* (public savings banks) on politicians' success in local elections**. For this purpose, we exploit the fact that not all locally elected political leaders in Germany are board members in savings banks and compare electoral performance of politicians with and without participation in savings bank’s Board of Directors.
@@ -30,7 +35,7 @@ The collapse of large the US bank Lehman Brothers in 2008 and the global financi
 
 ```{r load banking statistic, include=FALSE, echo=FALSE}
 # load packages
-include.packages <- c("ggplot2", "plotly", "gridExtra")
+include.packages <- c("ggplot2", "plotly", "gridExtra", "stargazer")
 
 needed.packages <- include.packages[!(include.packages %in% installed.packages()[, "Package"])]
 if(length(needed.packages)) install.packages(needed.packages, 
@@ -39,9 +44,10 @@ if(length(needed.packages)) install.packages(needed.packages,
 lapply(include.packages, library, character.only = TRUE)  # loading all packages at once
 
 # set working directory and load file
-try(setwd("/Users/jonasmarkgraf/Desktop/FinalProject/data/"))
-try(setwd("~/Git/FinalProject/data"))
+try(setwd("/Users/jonasmarkgraf/Desktop/FinalProject/data/"), silent = TRUE)
+try(setwd("~/Git/FinalProject/data"), silent = TRUE)
 source("BankSector.R")
+source("../paper/standalone_R_code.R")
 
 # figures for banking sector in Germany
 p5 <- ggplot(BankSector, aes(BankType, TotalAssets)) +
@@ -84,6 +90,33 @@ In our empirical strategy we exploit the fact that not all municipal mayors in B
 
 Compared to mayors without a position in a Sparkassen board, mayors who are also represented in the governing board of the local savings bank have 3 percentage-point higher reelection rate. 
 
+```{r reelection_plot, echo=FALSE, warning=FALSE, fig.height=2, include=FALSE}
+# This code chunk is deactivated
+ggplot(MayorElection2, aes(x = L.VoteShareWinner, y = Reelection, 
+                           colour = IncumbentSparkassenMember)) +
+  geom_point(alpha = 0.5) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+                       panel.background = element_blank()) + 
+  xlab("Vote share in previous election") + 
+  scale_colour_discrete(name = "", breaks = c(FALSE, TRUE),
+                      labels = c("not in the Sparkassen Board", "Sparkassen baord member")) +
+  scale_y_continuous(breaks=0:1)
+```
+
+```{r alt_plot, echo=FALSE, warning=FALSE, cache=FALSE, message=FALSE, fig.height=2}
+library(plotly)
+MayorElection2$ISM <- ifelse(MayorElection2$IncumbentSparkassenMember, "Board member", "non-Board member")
+x <- list(title = "Vote share in previous election, in %")
+y <- list(tickmode = "auto", nticks = 2)
+p <- plot_ly(MayorElection2, x = L.VoteShareWinner, y = Reelection, 
+             text = paste("Name:", NameCandidate1), 
+             mode = "markers", group = ISM, colors = "Set1",
+             opacity = 0.5) %>%  layout(xaxis = x, yaxis = y) 
+p
+```
+When we include the vote share a candidate received in the previous election along with board membership and whether or not a mayor was reelected (in the graph above), a much more fuzzy picture emerges. Most mayors who have done really good (>70% of votes) in the last election are reelected. On the other hand, most mayors who do not become reelected gained in between 50% and 70% of the votes in the last election. 
+
+However, it no clear patterns of board-member-mayors cluttering around the high numbers of approval in the previous election. Instead, mayors who are also board members seem scattered randomly throughout reelected and non-reelected mayors. 
+
 Guided by this first finding, we conducted a logistic regression to see whether a statistically significant effect remained when controlling for  
  + share of votes obtained during the last election
  + logged number of eligible voters in the municipality (as a proxy for municipality size)
@@ -91,7 +124,6 @@ Guided by this first finding, we conducted a logistic regression to see whether 
  
  
 ```{r regression, include=FALSE}
-source("paper/standalone_R_code.R")
 model4 <- glm(Reelection~IncumbentSparkassenMember +
                 L.VoteShareWinner +
                 log(NumberEligVoter) +
@@ -105,16 +137,19 @@ covarnames <- c("Sparkassen board member", "Previous vote share", "Female", "Num
 ```{r results_table, echo=FALSE, warning=FALSE, results="asis"}
 stargazer(model4, title = "Logistic regression results w/ odds ratios", dep.var.labels = "reelection of mayor", covariate.labels = covarnames, header = FALSE, single.row = TRUE, apply.coef = exp, t.auto = F, p.auto = F, report = "vcp*", digits = 2, keep.stat = c("n", "ll", "rsq"), type = "html")
 ```
+\br
+\br 
 
-Unfortunately, the logistic regression does not support the finding that there's a statistically significant effect of board membership. 
+Unfortunately, the logistic regression does not support the finding that there's a statistically significant effect of board membership, as the p-value associated with our coefficient estimates are way too big. The same goes for all other, less specified models which we ran on the same data set (for a listing of all models which were run and further insights into the data, please see our [Research Paper](https://github.com/mberneaud/FinalProject/blob/master/paper/FinalPaper.pdf)).  
+On a positive side, the regression shows a strong incumbency effect which is amplified the more votes a candidate received during the last election. 
 
-For a listing of all models which were run and further insights into the data, please see our [Research Paper](https://github.com/mberneaud/FinalProject/blob/master/paper/FinalPaper.pdf). 
+
 
 ## Conclusion
 
-Summarize finding regarding research question
+At this stage of the research project, we can conclude that public banks are indeed heavily politicised. Moreover, the proportion of reelected mayors is slightly larger among those who are a member of their local *Sparkassen* board. Unfortunately, the logistic regression does not allow us to exclude the possibility that this relationship is due to random chance. In the future, data on additional German federal states must be collected in order to generate models with larger statistical power. These models might enable us to generate statistically significant results. 
 
-Caveats/weaknesses of approach; future steps in the analysis
+
 
 ## References
 

@@ -1,0 +1,14 @@
+base
+ggplot2
+plotly
+gridExtra
+stargazer
+dplyr
+stringr
+readxl
+DataCombine
+texreg
+MASS
+knitr
+rmarkdown
+xtable

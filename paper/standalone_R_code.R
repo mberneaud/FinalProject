@@ -19,13 +19,13 @@ knitr::write_bib(include.packages, "packages.bib")
 # Loading data ------------------------------------------------------------
 
 # Sparkassen Board Membership data
-SparkassenBoard <- read_excel("data/BankBoards_Bavaria_RImport.xlsx",
+SparkassenBoard <- read_excel("BankBoards_Bavaria_RImport.xlsx",
                               sheet = "BoardComp")
 ## define variable class:
 SparkassenBoard$Incumbent <- as.character(SparkassenBoard$Incumbent)
 
 # Municipal Election data
-MayorElection <- read_excel("data/MayorElectionData.xlsx",
+MayorElection <- read_excel("MayorElectionData.xlsx",
                             sheet = "Bgm_OB")
 
 
